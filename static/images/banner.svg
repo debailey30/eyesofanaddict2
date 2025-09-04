@@ -1,0 +1,84 @@
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a90e2;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#27ae60;stop-opacity:0.1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="400" fill="url(#bg)"/>
+  
+  <!-- Mountain/Journey Path -->
+  <path d="M0 350 Q200 250 400 300 Q600 350 800 280 L800 400 L0 400 Z" fill="#e8f4f8" opacity="0.6"/>
+  <path d="M0 380 Q200 320 400 340 Q600 380 800 330 L800 400 L0 400 Z" fill="#d4edda" opacity="0.4"/>
+  
+  <!-- Sun/Hope Symbol -->
+  <circle cx="650" cy="100" r="60" fill="#f39c12" opacity="0.8"/>
+  <circle cx="650" cy="100" r="40" fill="#f1c40f"/>
+  
+  <!-- Sun rays -->
+  <g stroke="#f39c12" stroke-width="3" opacity="0.6">
+    <line x1="650" y1="20" x2="650" y2="40"/>
+    <line x1="650" y1="160" x2="650" y2="180"/>
+    <line x1="570" y1="100" x2="590" y2="100"/>
+    <line x1="710" y1="100" x2="730" y2="100"/>
+    <line x1="595" y1="45" x2="605" y2="55"/>
+    <line x1="695" y1="145" x2="705" y2="155"/>
+    <line x1="705" y1="45" x2="695" y2="55"/>
+    <line x1="605" y1="145" x2="595" y2="155"/>
+  </g>
+  
+  <!-- Trees/Growth -->
+  <g fill="#27ae60" opacity="0.7">
+    <polygon points="100,320 120,280 140,320" />
+    <polygon points="160,310 175,270 190,310" />
+    <polygon points="220,325 235,285 250,325" />
+  </g>
+  
+  <!-- Tree trunks -->
+  <g fill="#8b4513" opacity="0.8">
+    <rect x="118" y="320" width="4" height="20"/>
+    <rect x="173" y="310" width="4" height="25"/>
+    <rect x="233" y="325" width="4" height="20"/>
+  </g>
+  
+  <!-- Recovery Symbol - Interconnected circles representing community -->
+  <g fill="none" stroke="#4a90e2" stroke-width="4" opacity="0.8">
+    <circle cx="300" cy="150" r="30"/>
+    <circle cx="350" cy="180" r="25"/>
+    <circle cx="280" cy="200" r="20"/>
+  </g>
+  
+  <!-- Connection lines -->
+  <g stroke="#8e44ad" stroke-width="2" opacity="0.6">
+    <line x1="320" y1="165" x2="335" y2="175"/>
+    <line x1="290" y1="175" x2="290" y2="185"/>
+    <line x1="310" y1="190" x2="325" y2="195"/>
+  </g>
+  
+  <!-- Title Text -->
+  <text x="400" y="250" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="#2c3e50" text-anchor="middle">
+    Eyes of an Addict
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="400" y="285" font-family="Arial, sans-serif" font-size="18" fill="#5a6c7d" text-anchor="middle">
+    Recovery Community • Peer Support • Authentic Experience
+  </text>
+  
+  <!-- Recovery milestone markers -->
+  <g fill="#27ae60" opacity="0.6">
+    <circle cx="100" cy="360" r="3"/>
+    <circle cx="200" cy="340" r="3"/>
+    <circle cx="300" cy="350" r="3"/>
+    <circle cx="400" cy="335" r="3"/>
+    <circle cx="500" cy="355" r="3"/>
+    <circle cx="600" cy="345" r="3"/>
+    <circle cx="700" cy="340" r="3"/>
+  </g>
+  
+  <!-- Path/Journey line connecting milestones -->
+  <path d="M100 360 Q200 340 300 350 Q400 335 500 355 Q600 345 700 340" 
+        fill="none" stroke="#4a90e2" stroke-width="2" opacity="0.5" stroke-dasharray="5,5"/>
+</svg>

@@ -1,0 +1,100 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="shirtGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8e44ad;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e74c3c;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="#f0f0f0"/>
+  
+  <!-- T-shirt outline -->
+  <path d="M120 80 L120 100 Q120 95 125 95 L150 95 L150 80 Q150 70 160 70 L240 70 Q250 70 250 80 L250 95 L275 95 Q280 95 280 100 L280 80 Q290 75 300 85 L300 120 Q300 125 295 125 L280 125 L280 220 Q280 230 270 230 L130 230 Q120 230 120 220 L120 125 L105 125 Q100 125 100 120 L100 85 Q100 75 110 80 Z" 
+        fill="url(#shirtGradient)" opacity="0.9"/>
+  
+  <!-- T-shirt inner area -->
+  <path d="M130 95 L130 210 Q130 215 135 215 L265 215 Q270 215 270 210 L270 95 L250 95 L250 85 Q245 80 235 80 L165 80 Q155 80 150 85 L150 95 Z" 
+        fill="white"/>
+  
+  <!-- Inspirational text on shirt -->
+  <text x="200" y="130" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#2c3e50" text-anchor="middle">
+    RECOVERY
+  </text>
+  <text x="200" y="150" font-family="Arial, sans-serif" font-size="14" fill="#4a90e2" text-anchor="middle">
+    IS POSSIBLE
+  </text>
+  
+  <!-- Recovery symbol -->
+  <circle cx="200" cy="170" r="15" fill="none" stroke="#27ae60" stroke-width="3"/>
+  <path d="M190 170 L195 175 L210 160" stroke="#27ae60" stroke-width="3" fill="none"/>
+  
+  <!-- Day counter -->
+  <rect x="170" y="185" width="60" height="20" fill="#f39c12" rx="10"/>
+  <text x="200" y="197" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">
+    ONE DAY
+  </text>
+  
+  <!-- Mug/Cup representation -->
+  <g transform="translate(320, 100)">
+    <ellipse cx="15" cy="35" rx="12" ry="8" fill="#ffffff" stroke="#2c3e50" stroke-width="2"/>
+    <rect x="3" y="15" width="24" height="20" fill="#4a90e2" rx="2"/>
+    <ellipse cx="15" cy="15" rx="12" ry="3" fill="#5a8fd8"/>
+    <path d="M27 20 Q32 20 32 25 Q32 30 27 30" stroke="#2c3e50" stroke-width="2" fill="none"/>
+    <text x="15" y="27" font-family="Arial, sans-serif" font-size="6" fill="white" text-anchor="middle">HOPE</text>
+  </g>
+  
+  <!-- Sticker pack representation -->
+  <g transform="translate(50, 120)">
+    <rect width="50" height="40" fill="white" stroke="#5a6c7d" stroke-width="1" rx="5"/>
+    <text x="25" y="12" font-family="Arial, sans-serif" font-size="8" fill="#2c3e50" text-anchor="middle">STICKERS</text>
+    
+    <!-- Individual stickers -->
+    <circle cx="12" cy="22" r="4" fill="#27ae60"/>
+    <text x="12" y="25" font-family="Arial, sans-serif" font-size="6" fill="white" text-anchor="middle">✓</text>
+    
+    <circle cx="25" cy="22" r="4" fill="#f39c12"/>
+    <text x="25" y="25" font-family="Arial, sans-serif" font-size="4" fill="white" text-anchor="middle">30</text>
+    
+    <circle cx="38" cy="22" r="4" fill="#e74c3c"/>
+    <text x="38" y="25" font-family="Arial, sans-serif" font-size="6" fill="white" text-anchor="middle">♥</text>
+    
+    <rect x="8" y="30" width="8" height="6" fill="#8e44ad" rx="1"/>
+    <text x="12" y="34" font-family="Arial, sans-serif" font-size="3" fill="white" text-anchor="middle">STRONG</text>
+    
+    <rect x="20" y="30" width="14" height="6" fill="#4a90e2" rx="1"/>
+    <text x="27" y="34" font-family="Arial, sans-serif" font-size="3" fill="white" text-anchor="middle">GRATEFUL</text>
+  </g>
+  
+  <!-- Keychain representation -->
+  <g transform="translate(320, 180)">
+    <circle cx="8" cy="8" r="6" fill="none" stroke="#5a6c7d" stroke-width="2"/>
+    <rect x="5" y="15" width="16" height="12" fill="#27ae60" rx="2"/>
+    <text x="13" y="22" font-family="Arial, sans-serif" font-size="5" fill="white" text-anchor="middle">RECOVERY</text>
+    <text x="13" y="26" font-family="Arial, sans-serif" font-size="4" fill="white" text-anchor="middle">PRIDE</text>
+  </g>
+  
+  <!-- Print-on-Demand badge -->
+  <g transform="translate(50, 50)">
+    <rect width="60" height="20" fill="#8e44ad" rx="10"/>
+    <text x="30" y="12" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="white" text-anchor="middle">PRINT ON DEMAND</text>
+  </g>
+  
+  <!-- Quality badge -->
+  <g transform="translate(320, 50)">
+    <polygon points="15,5 18,12 25,12 20,17 22,24 15,20 8,24 10,17 5,12 12,12" fill="#f39c12"/>
+    <text x="15" y="40" font-family="Arial, sans-serif" font-size="6" fill="#2c3e50" text-anchor="middle">QUALITY</text>
+  </g>
+  
+  <!-- Bottom description -->
+  <text x="200" y="270" font-family="Arial, sans-serif" font-size="12" fill="#5a6c7d" text-anchor="middle">
+    T-Shirts • Mugs • Stickers • Keychains • Recovery Pride Merchandise
+  </text>
+  
+  <!-- Affordable price tag -->
+  <g transform="translate(150, 250)">
+    <path d="M0 5 L15 5 L20 10 L15 15 L0 15 Z" fill="#e74c3c"/>
+    <circle cx="4" cy="10" r="2" fill="white"/>
+    <text x="35" y="12" font-family="Arial, sans-serif" font-size="10" fill="#2c3e50">Affordable Prices</text>
+  </g>
+</svg>
