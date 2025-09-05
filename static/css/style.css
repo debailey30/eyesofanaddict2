@@ -10,12 +10,8 @@ body {
 header.hero {
     text-align: center;
     padding: 4rem 2rem;
-    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../images/hero-background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background: linear-gradient(135deg, #f4f4f4 0%, #e8f4f8 100%);
     border-radius: 0 0 1rem 1rem;
-    position: relative;
 }
 
 header.hero img {
@@ -27,17 +23,15 @@ header.hero img {
 }
 
 header.hero h1 {
-    color: white;
+    color: #2c3e50;
     font-weight: 700;
     margin-bottom: 1rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 header.hero p {
     font-size: 1.2rem;
-    color: white;
+    color: #5a6c7d;
     margin: 1rem 0;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
 }
 
 /* Sections */
@@ -53,6 +47,25 @@ section {
     --recovery-orange: #f39c12;
     --recovery-gray: #95a5a6;
     --recovery-dark: #2c3e50;
+}
+
+/* Navigation with background */
+nav {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../images/hero-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+nav ul li a {
+    color: white !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+nav ul li strong a {
+    color: white !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 /* Navigation enhancements */
