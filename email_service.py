@@ -19,7 +19,7 @@ def send_welcome_email(to_email, subscriber_name=None):
         sg = SendGridAPIClient(sendgrid_key)
 
         # Email content
-        from_email = Email("noreply@eyesofanaddict.com", "D. Bailey - Eyes of an Addict")
+        from_email = Email("info@eyesofanaddict.online", "D. Bailey - Eyes of an Addict")
         to_email = To(to_email)
         
         subject = "Welcome to Eyes of an Addict Recovery Community! 🌟"
@@ -110,7 +110,7 @@ def send_welcome_email(to_email, subscriber_name=None):
             <div class="footer">
                 <p>Eyes of an Addict - Recovery Community</p>
                 <p>Created by peers, for peers | 5+ years recovery experience</p>
-                <p>Questions? Reply to this email - we read every message!</p>
+                <p>Questions? Email us at info@eyesofanaddict.online - we read every message!</p>
             </div>
         </body>
         </html>
@@ -154,7 +154,7 @@ def send_welcome_email(to_email, subscriber_name=None):
         D. Bailey, CPRSS
         Eyes of an Addict - Recovery Community
         
-        Questions? Reply to this email anytime!
+        Questions? Email us at info@eyesofanaddict.online anytime!
         """
 
         # Create the email
