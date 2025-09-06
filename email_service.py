@@ -83,9 +83,9 @@ def send_welcome_email(to_email, subscriber_name=None):
                 </ul>
                 
                 <div class="highlight">
-                    <h3>📖 Get Your Complete Recovery Journal</h3>
-                    <p>Your 30-Day Recovery Journal is too large for email attachment, but you can download it directly from our community page. It's completely free for all community members!</p>
-                    <a href="#" class="button">Download Your Journal</a>
+                    <h3>📖 Premium Recovery Journal Available</h3>
+                    <p>Ready to take your recovery to the next level? Our comprehensive 30-Day Recovery Journal offers personalized tracking, progress analytics, and secure cloud storage for just $19.99/month.</p>
+                    <a href="#" class="button">Subscribe to Premium Journal</a>
                 </div>
                 
                 <div class="highlight">
