@@ -8,18 +8,43 @@ body {
 
 /* Hero Section */
 header.hero {
-    text-align: center;
-    padding: 4rem 2rem;
+    padding: 2rem;
     background: linear-gradient(135deg, #f4f4f4 0%, #e8f4f8 100%);
     border-radius: 0 0 1rem 1rem;
 }
 
-header.hero img {
-    max-width: 100%;
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 2rem;
+}
+
+.hero-banner {
+    width: 100%;
+    max-width: 800px;
+}
+
+.hero-banner img {
+    width: 100%;
     height: auto;
     border-radius: 8px;
-    margin: 2rem 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hero-text {
+    text-align: center;
+    max-width: 600px;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
 }
 
 header.hero h1 {
@@ -242,10 +267,134 @@ ul li a[href*="baileytrends.com"] [data-feather] {
     color: var(--recovery-purple);
 }
 
+/* Free Resources Section */
+.free-offer {
+    background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
+    padding: 3rem 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.free-resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.resource-item {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.resource-item:hover {
+    transform: translateY(-4px);
+}
+
+.cta-button {
+    background-color: var(--recovery-green) !important;
+    border-color: var(--recovery-green) !important;
+    font-size: 1.2rem !important;
+    padding: 1rem 2rem !important;
+    font-weight: 600 !important;
+}
+
+/* Premium Journal Section */
+.premium-offer {
+    background: linear-gradient(135deg, #f8f4ff 0%, #fff8f0 100%);
+    padding: 3rem 2rem;
+    border-radius: 1rem;
+    margin: 3rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.journal-features {
+    margin: 2rem 0;
+}
+
+.feature {
+    text-align: center;
+    padding: 1rem;
+}
+
+.pricing-section {
+    display: flex;
+    justify-content: center;
+    margin: 3rem 0;
+}
+
+.price-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    border: 2px solid var(--recovery-blue);
+}
+
+.price {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--recovery-blue);
+    margin: 1rem 0;
+}
+
+.price span {
+    font-size: 1rem;
+    color: var(--recovery-gray);
+}
+
+.price-card ul {
+    text-align: left;
+    margin: 1.5rem 0;
+    padding-left: 1rem;
+}
+
+.price-card li {
+    margin: 0.5rem 0;
+    position: relative;
+}
+
+.price-card li::before {
+    content: "✓";
+    color: var(--recovery-green);
+    font-weight: bold;
+    position: absolute;
+    left: -1rem;
+}
+
+.premium-cta {
+    background-color: var(--recovery-blue) !important;
+    border-color: var(--recovery-blue) !important;
+    font-size: 1.1rem !important;
+    padding: 1rem 2rem !important;
+    width: 100% !important;
+    margin: 1rem 0 !important;
+}
+
+/* Additional sections styling */
+#additional-offerings {
+    margin: 4rem 0;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     header.hero {
         padding: 2rem 1rem;
+    }
+    
+    .hero-content {
+        gap: 1rem;
+    }
+    
+    .hero-actions {
+        flex-direction: column;
+        align-items: center;
     }
     
     header.hero h1 {
@@ -256,9 +405,21 @@ ul li a[href*="baileytrends.com"] [data-feather] {
         grid-template-columns: 1fr;
     }
     
+    .free-resources-grid {
+        grid-template-columns: 1fr;
+    }
+    
     nav ul {
         flex-direction: column;
         gap: 0.5rem;
+    }
+    
+    .free-offer, .premium-offer {
+        padding: 2rem 1rem;
+    }
+    
+    .price {
+        font-size: 2rem;
     }
 }
 

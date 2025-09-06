@@ -3,53 +3,122 @@
 {% block content %}
 <!-- Hero -->
 <header class="hero">
-    <div style="position: relative;">
-        <img src="{{ url_for('static', filename='images/banner.svg') }}" alt="Eyes of an Addict - Recovery Community" style="width: 100%; max-width: 800px; height: auto; margin: 2rem 0;">
+    <div class="hero-content">
+        <div class="hero-banner">
+            <img src="{{ url_for('static', filename='images/banner.svg') }}" alt="Eyes of an Addict - Recovery Community">
+        </div>
+        <div class="hero-text">
+            <h1>Welcome to Eyes of an Addict</h1>
+            <p>A recovery-based community for people in early recovery.</p>
+            <div class="hero-actions">
+                <a href="{{ url_for('join_community') }}" role="button">Get Free Recovery Resources</a>
+                <a href="#journal-subscription" role="button" class="secondary">30-Day Recovery Journal</a>
+            </div>
+        </div>
     </div>
-    <h1>Welcome to Eyes of an Addict</h1>
-    <p>A recovery-based community for people in early recovery.</p>
-    <p><a href="{{ url_for('join_community') }}" role="button">Join the Community</a></p>
 </header>
 
-<!-- Main -->
-<main class="container">
+<!-- Free Resources Landing Section -->
+<section id="free-resources" class="container">
     <div class="grid">
-        <section id="features">
+        <article class="free-offer">
             <hgroup>
-                <h2>Our Offerings</h2>
-                <h3>Built by peers, for peers</h3>
+                <h2>🎁 Free Recovery Resources</h2>
+                <h3>Start your recovery journey with our proven tools</h3>
             </hgroup>
-            <p>Eyes of an Addict is more than a brand — it's a movement. We provide tools, resources, and authentic peer-led support for anyone walking the recovery journey.</p>
-
-            <div class="grid">
-                <article>
-                    <h3><i data-feather="book-open"></i> 30-Day Recovery Journal</h3>
-                    <p>Our flagship recovery tool - a comprehensive journal for the critical first 30 days. Book 1 of a 3-part series.</p>
-                </article>
-
-                <article>
-                    <h3><i data-feather="heart"></i> Recovery Tools</h3>
-                    <p>Digital products created by someone with real recovery experience (5+ years).</p>
-                </article>
-
-                <article>
-                    <h3><i data-feather="shopping-bag"></i> POD Shop</h3>
-                    <p>Unique merchandise and print-on-demand items that inspire recovery pride.</p>
-                </article>
-
-                <article>
-                    <h3><i data-feather="users"></i> Community Support</h3>
-                    <p>Authentic peer-led guidance, affordable coaching, and consulting (coming soon).</p>
-                </article>
+            <p>Join our recovery community and get instant access to essential tools created by someone with 5+ years of real recovery experience.</p>
+            
+            <div class="free-resources-grid">
+                <div class="resource-item">
+                    <h4><i data-feather="file-text"></i> Recovery Welcome Guide</h4>
+                    <p>Essential first steps and mindset shifts for early recovery</p>
+                </div>
+                <div class="resource-item">
+                    <h4><i data-feather="heart"></i> Daily Affirmations</h4>
+                    <p>30 powerful affirmations to rewire your thinking patterns</p>
+                </div>
+                <div class="resource-item">
+                    <h4><i data-feather="target"></i> Milestone Tracker</h4>
+                    <p>Track your progress and celebrate recovery victories</p>
+                </div>
             </div>
-
-            <div style="text-align: center; margin-top: 2rem;">
-                <a href="{{ url_for('products') }}" role="button">View Our Products</a>
-                <a href="{{ url_for('faq') }}" role="button" class="secondary">Learn More</a>
+            
+            <div style="text-align: center; margin: 2rem 0;">
+                <a href="{{ url_for('join_community') }}" role="button" class="cta-button">Get Your Free Resources Now</a>
+                <p><small>Join 500+ people in recovery • No spam, ever</small></p>
             </div>
-        </section>
+        </article>
     </div>
-</main>
+</section>
+
+<!-- Premium Journal Section -->
+<section id="journal-subscription" class="container">
+    <article class="premium-offer">
+        <hgroup>
+            <h2>📖 30-Day Recovery Journal - Premium Subscription</h2>
+            <h3>Your comprehensive recovery companion for the critical first 30 days</h3>
+        </hgroup>
+        
+        <div class="journal-features">
+            <div class="grid">
+                <div class="feature">
+                    <h4><i data-feather="book-open"></i> Interactive Digital Journal</h4>
+                    <p>Daily prompts, reflections, and progress tracking designed by recovery experts</p>
+                </div>
+                <div class="feature">
+                    <h4><i data-feather="users"></i> Personal Recovery Dashboard</h4>
+                    <p>Your private space to track milestones, mood, and growth patterns</p>
+                </div>
+                <div class="feature">
+                    <h4><i data-feather="download"></i> Save Your Progress</h4>
+                    <p>Individual login access with secure cloud storage for your recovery journey</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pricing-section">
+            <div class="price-card">
+                <h3>Premium Recovery Journal</h3>
+                <div class="price">$19.99<span>/month</span></div>
+                <ul>
+                    <li>30-day structured recovery program</li>
+                    <li>Personal recovery dashboard</li>
+                    <li>Progress tracking & analytics</li>
+                    <li>Secure cloud storage</li>
+                    <li>Mobile & desktop access</li>
+                    <li>Book 1 of 3-part series</li>
+                </ul>
+                <a href="#" role="button" class="premium-cta">Start Your Recovery Journey</a>
+                <p><small>Cancel anytime • 7-day free trial</small></p>
+            </div>
+        </div>
+    </article>
+</section>
+
+<!-- Additional Offerings -->
+<section id="additional-offerings" class="container">
+    <hgroup>
+        <h2>More Ways We Support Your Recovery</h2>
+        <h3>Built by peers, for peers</h3>
+    </hgroup>
+    
+    <div class="grid">
+        <article>
+            <h3><i data-feather="shopping-bag"></i> Recovery Merchandise</h3>
+            <p>Unique print-on-demand items that inspire recovery pride and connection.</p>
+        </article>
+
+        <article>
+            <h3><i data-feather="users"></i> Peer Coaching</h3>
+            <p>One-on-one support from someone who's walked the path (coming soon).</p>
+        </article>
+
+        <article>
+            <h3><i data-feather="globe"></i> Community Resources</h3>
+            <p>Access to recovery tools, inspiration, and peer connections.</p>
+        </article>
+    </div>
+</section>
 
 <!-- Community Info -->
 <section id="community-info" aria-label="Community Information">
