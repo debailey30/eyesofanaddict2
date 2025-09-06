@@ -2,6 +2,7 @@ from flask import render_template, request, flash, redirect, url_for
 from app import app, db
 from forms import ContactForm, EmailSubscriptionForm
 from models import EmailSubscriber, ContactMessage
+from email_service import send_welcome_email
 import logging
 
 @app.route('/')
@@ -64,7 +65,14 @@ def join_community():
                 existing_subscriber.is_active = True
                 existing_subscriber.name = form.name.data if form.name.data else existing_subscriber.name
                 db.session.commit()
-                flash("Welcome back! Your subscription has been reactivated.", 'success')
+                
+                # Send welcome email for returning subscriber
+                email_sent = send_welcome_email(form.email.data, form.name.data)
+                
+                if email_sent:
+                    flash("Welcome back! Your subscription has been reactivated and fresh recovery resources are on their way to your inbox!", 'success')
+                else:
+                    flash("Welcome back! Your subscription has been reactivated.", 'success')
         else:
             # Create new subscriber
             subscriber = EmailSubscriber(
@@ -77,7 +85,15 @@ def join_community():
                 db.session.add(subscriber)
                 db.session.commit()
                 logging.info(f"New email subscriber: {form.email.data}")
-                flash(f"Welcome to the Eyes of an Addict community! You'll receive updates and recovery resources at {form.email.data}", 'success')
+                
+                # Send welcome email with resources
+                email_sent = send_welcome_email(form.email.data, form.name.data)
+                
+                if email_sent:
+                    flash(f"Welcome to the Eyes of an Addict community! Check your email at {form.email.data} for your free recovery resources!", 'success')
+                else:
+                    flash(f"You've joined our community! We're working on getting your welcome email to you - please check back if you don't receive it soon.", 'success')
+                    
             except Exception as e:
                 db.session.rollback()
                 logging.error(f"Error saving email subscriber: {e}")
