@@ -14,4 +14,6 @@ dependencies = [
     "sqlalchemy>=2.0.43",
     "sendgrid>=6.12.4",
     "slack-sdk>=3.36.0",
+    "stripe>=12.5.1",
+    "flask-login>=0.6.3",
 ]

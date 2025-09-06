@@ -23,7 +23,14 @@
             <li><a href="{{ url_for('index') }}#features">Features</a></li>
             <li><a href="{{ url_for('products') }}">Shop</a></li>
             <li><a href="{{ url_for('faq') }}">FAQ</a></li>
-            <li><a href="{{ url_for('contact') }}" role="button">Contact</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('dashboard') }}">My Journal</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                <li><a href="{{ url_for('register') }}" role="button">Subscribe</a></li>
+            {% endif %}
         </ul>
     </nav>
 
