@@ -9,7 +9,7 @@ body {
 /* Hero Section */
 header.hero {
     padding: 2rem;
-    background: linear-gradient(135deg, #f4f4f4 0%, #e8f4f8 100%);
+    background: white;
     border-radius: 0 0 1rem 1rem;
 }
 
@@ -22,17 +22,7 @@ header.hero {
     gap: 2rem;
 }
 
-.hero-banner {
-    width: 100%;
-    max-width: 800px;
-}
-
-.hero-banner img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+/* Remove banner styles - no longer needed */
 
 .hero-text {
     text-align: center;
