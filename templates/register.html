@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Subscribe to Recovery Journal | Eyes of an Addict{% endblock %}
+
+{% block content %}
+<main class="container">
+    <article style="max-width: 500px; margin: 4rem auto;">
+        <hgroup>
+            <h1>📖 Start Your Recovery Journey</h1>
+            <h2>Create your account and subscribe to the 30-Day Recovery Journal</h2>
+        </hgroup>
+        
+        <div class="subscription-benefits" style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0;">
+            <h3>What you'll get:</h3>
+            <ul>
+                <li>✓ Interactive 30-day recovery program</li>
+                <li>✓ Personal recovery dashboard</li>
+                <li>✓ Progress tracking & analytics</li>
+                <li>✓ Secure cloud storage</li>
+                <li>✓ Mobile & desktop access</li>
+                <li>✓ 7-day free trial</li>
+            </ul>
+            <p><strong>Only $19.99/month</strong> • Cancel anytime</p>
+        </div>
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            
+            <label for="{{ form.name.id }}" class="form-label">{{ form.name.label.text }}</label>
+            {{ form.name(class="form-control") }}
+            {% if form.name.errors %}
+                <small style="color: red;">{{ form.name.errors[0] }}</small>
+            {% endif %}
+            
+            <label for="{{ form.email.id }}" class="form-label">{{ form.email.label.text }}</label>
+            {{ form.email(class="form-control") }}
+            {% if form.email.errors %}
+                <small style="color: red;">{{ form.email.errors[0] }}</small>
+            {% endif %}
+            
+            <label for="{{ form.password.id }}" class="form-label">{{ form.password.label.text }}</label>
+            {{ form.password(class="form-control") }}
+            {% if form.password.errors %}
+                <small style="color: red;">{{ form.password.errors[0] }}</small>
+            {% endif %}
+            
+            <label for="{{ form.confirm_password.id }}" class="form-label">{{ form.confirm_password.label.text }}</label>
+            {{ form.confirm_password(class="form-control") }}
+            {% if form.confirm_password.errors %}
+                <small style="color: red;">{{ form.confirm_password.errors[0] }}</small>
+            {% endif %}
+            
+            {{ form.submit(class="btn btn-primary", style="width: 100%; margin-top: 2rem; padding: 1rem; font-size: 1.1rem;") }}
+        </form>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <p>Already have an account? <a href="{{ url_for('login') }}">Sign in here</a></p>
+            <small>Secure payment processing by Stripe • Your recovery journey starts today</small>
+        </div>
+    </article>
+</main>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}My Recovery Journal | Eyes of an Addict{% endblock %}
+
+{% block content %}
+<main class="container">
+    <header style="text-align: center; margin: 2rem 0;">
+        <h1>Welcome, {{ current_user.name }}!</h1>
+        <p>Your 30-Day Recovery Journal</p>
+        
+        <div class="progress-summary" style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0;">
+            <div style="text-align: center;">
+                <h3 style="color: var(--recovery-green); margin: 0;">{{ current_user.days_completed }}</h3>
+                <small>Days Completed</small>
+            </div>
+            <div style="text-align: center;">
+                <h3 style="color: var(--recovery-blue); margin: 0;">{{ current_user.current_day }}</h3>
+                <small>Current Day</small>
+            </div>
+            <div style="text-align: center;">
+                <h3 style="color: var(--recovery-purple); margin: 0;">{{ 30 - current_user.current_day + 1 }}</h3>
+                <small>Days Remaining</small>
+            </div>
+        </div>
+        
+        <div style="margin: 2rem 0;">
+            <a href="{{ url_for('manage_subscription') }}" role="button" class="secondary">Manage Subscription</a>
+        </div>
+    </header>
+
+    <section class="journal-grid">
+        <h2>Your Recovery Journey</h2>
+        <div class="journal-days" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            {% for entry in entries %}
+                <article class="day-card" style="border: 2px solid {% if entry.completed %}var(--recovery-green){% else %}#dee2e6{% endif %}; border-radius: 0.5rem; padding: 1rem; text-align: center; transition: transform 0.3s ease;">
+                    <h3>Day {{ entry.day_number }}</h3>
+                    {% if entry.completed %}
+                        <p style="color: var(--recovery-green);">✓ Completed</p>
+                        {% if entry.mood_rating %}
+                            <p><small>Mood: {{ entry.mood_rating }}/10</small></p>
+                        {% endif %}
+                    {% elif entry.day_number == current_user.current_day %}
+                        <p style="color: var(--recovery-blue);">📝 Current Day</p>
+                        <a href="#" role="button" style="font-size: 0.9rem;">Start Writing</a>
+                    {% elif entry.day_number < current_user.current_day %}
+                        <p style="color: var(--recovery-orange);">⏳ Catch Up</p>
+                        <a href="#" role="button" class="secondary" style="font-size: 0.9rem;">Complete</a>
+                    {% else %}
+                        <p style="color: var(--recovery-gray);">🔒 Locked</p>
+                        <small>Complete previous days first</small>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section style="text-align: center; margin: 4rem 0; padding: 2rem; background: #f8f9fa; border-radius: 0.5rem;">
+        <h3>Need Support?</h3>
+        <p>Remember, recovery is a journey, not a destination. Take it one day at a time.</p>
+        <a href="{{ url_for('contact') }}" role="button" class="secondary">Contact Support</a>
+    </section>
+</main>
+
+<style>
+.day-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+</style>
+{% endblock %}

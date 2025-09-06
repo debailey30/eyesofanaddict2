@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Login | Eyes of an Addict{% endblock %}
+
+{% block content %}
+<main class="container">
+    <article style="max-width: 400px; margin: 4rem auto;">
+        <hgroup>
+            <h1>Welcome Back</h1>
+            <h2>Sign in to access your Recovery Journal</h2>
+        </hgroup>
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            
+            <label for="{{ form.email.id }}" class="form-label">{{ form.email.label.text }}</label>
+            {{ form.email(class="form-control") }}
+            {% if form.email.errors %}
+                <small style="color: red;">{{ form.email.errors[0] }}</small>
+            {% endif %}
+            
+            <label for="{{ form.password.id }}" class="form-label">{{ form.password.label.text }}</label>
+            {{ form.password(class="form-control") }}
+            {% if form.password.errors %}
+                <small style="color: red;">{{ form.password.errors[0] }}</small>
+            {% endif %}
+            
+            {{ form.submit(class="btn btn-primary", style="width: 100%; margin-top: 2rem; padding: 1rem;") }}
+        </form>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <p>Don't have an account? <a href="{{ url_for('register') }}">Subscribe to the Recovery Journal</a></p>
+            <p><a href="{{ url_for('index') }}">← Back to home</a></p>
+        </div>
+    </article>
+</main>
+{% endblock %}
