@@ -78,9 +78,15 @@ def send_welcome_email(to_email, subscriber_name=None):
                     <li>Download and read your welcome guide</li>
                     <li>Start using the daily affirmations</li>
                     <li>Set up your milestone tracker</li>
+                    <li>Visit our website to download your complete 30-Day Recovery Journal</li>
                     <li>Follow us on social media for daily inspiration</li>
-                    <li>Watch for updates on our 30-Day Recovery Journal (coming soon!)</li>
                 </ul>
+                
+                <div class="highlight">
+                    <h3>📖 Get Your Complete Recovery Journal</h3>
+                    <p>Your 30-Day Recovery Journal is too large for email attachment, but you can download it directly from our community page. It's completely free for all community members!</p>
+                    <a href="#" class="button">Download Your Journal</a>
+                </div>
                 
                 <div class="highlight">
                     <h3>🤝 Connect With Us</h3>
@@ -195,17 +201,27 @@ def send_welcome_email(to_email, subscriber_name=None):
             )
             mail.add_attachment(tracker_attachment)
 
-            # 30-Day Recovery Journal (PDF)
+            # 30-Day Recovery Journal (PDF) - Check file size first
             try:
-                with open('static/downloads/30-day-recovery-journal.pdf', 'rb') as f:
-                    journal_data = f.read()
-                journal_attachment = Attachment(
-                    FileContent(base64.b64encode(journal_data).decode()),
-                    FileName("30-Day-Recovery-Journal-by-D-Bailey.pdf"),
-                    FileType("application/pdf"),
-                    Disposition("attachment")
-                )
-                mail.add_attachment(journal_attachment)
+                import os
+                journal_path = 'static/downloads/30-day-recovery-journal.pdf'
+                if os.path.exists(journal_path):
+                    file_size = os.path.getsize(journal_path)
+                    # Only attach if file is under 10MB to avoid email blocks
+                    if file_size < 10 * 1024 * 1024:  # 10MB limit
+                        with open(journal_path, 'rb') as f:
+                            journal_data = f.read()
+                        journal_attachment = Attachment(
+                            FileContent(base64.b64encode(journal_data).decode()),
+                            FileName("30-Day-Recovery-Journal-by-D-Bailey.pdf"),
+                            FileType("application/pdf"),
+                            Disposition("attachment")
+                        )
+                        mail.add_attachment(journal_attachment)
+                    else:
+                        logging.info(f"Journal PDF too large ({file_size} bytes) - skipping attachment")
+                else:
+                    logging.info("Journal PDF not found - skipping attachment")
             except Exception as e:
                 logging.warning(f"Could not attach journal PDF: {e}")
 
