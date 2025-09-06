@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Join Our Community | Eyes of an Addict{% endblock %}
+
+{% block content %}
+<main class="container">
+    <hgroup style="text-align: center; margin: 2rem 0;">
+        <h1>Join Our Recovery Community</h1>
+        <h2>Get updates, resources, and peer support delivered to your inbox</h2>
+    </hgroup>
+
+    <div class="grid">
+        <section>
+            <article style="background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%); padding: 2rem; border-radius: 1rem;">
+                <h3><i data-feather="heart"></i> What You'll Receive</h3>
+                <ul style="line-height: 1.8;">
+                    <li><i data-feather="book-open"></i> Early access to recovery resources and tools</li>
+                    <li><i data-feather="calendar"></i> Updates on new products and community events</li>
+                    <li><i data-feather="users"></i> Peer-led insights and recovery tips</li>
+                    <li><i data-feather="star"></i> Exclusive content from D. Bailey</li>
+                    <li><i data-feather="gift"></i> Special offers on recovery journals and merchandise</li>
+                </ul>
+                
+                <div style="margin-top: 2rem; padding: 1rem; background-color: rgba(74, 144, 226, 0.1); border-radius: 0.5rem;">
+                    <h4 style="color: #4a90e2; margin-bottom: 0.5rem;"><i data-feather="shield"></i> Your Privacy Matters</h4>
+                    <p style="margin: 0; font-size: 0.9rem; color: #5a6c7d;">We respect your privacy and never share your email. You can unsubscribe anytime. This is a safe space for recovery support.</p>
+                </div>
+            </article>
+        </section>
+
+        <section>
+            <article>
+                <h3><i data-feather="mail"></i> Join Today</h3>
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div>
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control", placeholder="Your first name (optional)") }}
+                        {% if form.name.errors %}
+                            <small style="color: #dc3545;">
+                                {% for error in form.name.errors %}{{ error }}{% endfor %}
+                            </small>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-control", placeholder="your.email@example.com") }}
+                        {% if form.email.errors %}
+                            <small style="color: #dc3545;">
+                                {% for error in form.email.errors %}{{ error }}{% endfor %}
+                            </small>
+                        {% endif %}
+                    </div>
+
+                    {{ form.submit(class="btn btn-primary", style="width: 100%; margin-top: 1rem;") }}
+                </form>
+            </article>
+        </section>
+    </div>
+
+    <section style="margin-top: 3rem;">
+        <article style="background-color: #f8f9fa; padding: 2rem; border-radius: 0.5rem; text-align: center;">
+            <h3><i data-feather="users"></i> Join Over [Community Size] People in Recovery</h3>
+            <p>You're not alone in this journey. Our community is built by people with real recovery experience who understand what you're going through.</p>
+            
+            <div class="grid" style="margin-top: 2rem;">
+                <div>
+                    <h4 style="color: #27ae60;"><i data-feather="check-circle"></i> Peer-Led</h4>
+                    <p>Created by D. Bailey with 5+ years in recovery</p>
+                </div>
+                <div>
+                    <h4 style="color: #4a90e2;"><i data-feather="heart"></i> Authentic</h4>
+                    <p>No corporate wellness - just real recovery support</p>
+                </div>
+                <div>
+                    <h4 style="color: #f39c12;"><i data-feather="sunrise"></i> Hopeful</h4>
+                    <p>Focused on growth, progress, and recovery pride</p>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <div style="text-align: center; margin: 2rem 0;">
+        <a href="{{ url_for('products') }}" role="button" class="secondary">Browse Our Products</a>
+        <a href="{{ url_for('index') }}" role="button" class="secondary">Back to Home</a>
+    </div>
+</main>
+{% endblock %}

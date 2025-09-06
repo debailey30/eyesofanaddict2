@@ -25,3 +25,16 @@ class ContactForm(FlaskForm):
     ])
     
     submit = SubmitField('Send Message')
+
+class EmailSubscriptionForm(FlaskForm):
+    """Form for joining the email community"""
+    name = StringField('Name (Optional)', validators=[
+        Length(max=100, message="Name must be less than 100 characters")
+    ])
+    
+    email = EmailField('Email Address', validators=[
+        DataRequired(message="Please enter your email address"),
+        Email(message="Please enter a valid email address")
+    ])
+    
+    submit = SubmitField('Join Our Community')
