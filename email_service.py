@@ -56,12 +56,11 @@ def send_welcome_email(to_email, subscriber_name=None):
                 <p>Thank you for joining the <strong>Eyes of an Addict</strong> recovery community! I'm D. Bailey, a Certified Peer Recovery Support Specialist with over 5 years in recovery, and I'm excited to support you on this journey.</p>
                 
                 <div class="highlight">
-                    <h3>🎁 Your Welcome Package is Here!</h3>
-                    <p>I've attached four essential recovery resources created from real recovery experience:</p>
+                    <h3>🎁 Your Free Welcome Package is Here!</h3>
+                    <p>I've attached three essential recovery resources created from real recovery experience:</p>
                     <ul>
-                        <li><strong>30-Day Recovery Journal</strong> - The complete journal (Book 1 of 3) for your critical first 30 days</li>
                         <li><strong>Welcome Guide</strong> - Everything you need to know about our community and getting started</li>
-                        <li><strong>Daily Affirmations</strong> - 20 powerful affirmations for every stage of recovery</li>
+                        <li><strong>Daily Affirmations</strong> - 30 powerful affirmations for every stage of recovery</li>
                         <li><strong>Milestone Tracker</strong> - Celebrate your progress from day 1 to years of recovery</li>
                     </ul>
                 </div>
@@ -126,12 +125,11 @@ def send_welcome_email(to_email, subscriber_name=None):
         
         YOUR WELCOME PACKAGE:
         
-        I've attached four essential recovery resources:
+        I've attached three essential FREE recovery resources:
         
-        1. 30-Day Recovery Journal - The complete journal (Book 1 of 3) for your critical first 30 days
-        2. Welcome Guide - Everything you need to know about getting started
-        3. Daily Affirmations - 20 powerful affirmations for your recovery journey  
-        4. Milestone Tracker - Celebrate your progress from day 1 onwards
+        1. Welcome Guide - Everything you need to know about getting started
+        2. Daily Affirmations - 30 powerful affirmations for your recovery journey  
+        3. Milestone Tracker - Celebrate your progress from day 1 onwards
         
         WHAT MAKES US DIFFERENT:
         
@@ -145,7 +143,7 @@ def send_welcome_email(to_email, subscriber_name=None):
         - Start using the daily affirmations
         - Set up your milestone tracker
         - Follow us on social media (@eyes_of_an_addict on Instagram)
-        - Watch for our 30-Day Recovery Journal launch!
+        - Check out our Premium Recovery Journal subscription for advanced tools
         
         Remember: Recovery is a journey. Every day you choose recovery, you're winning. You're not alone - we're here to support you.
         
@@ -201,29 +199,7 @@ def send_welcome_email(to_email, subscriber_name=None):
             )
             mail.add_attachment(tracker_attachment)
 
-            # 30-Day Recovery Journal (PDF) - Check file size first
-            try:
-                import os
-                journal_path = 'static/downloads/30-day-recovery-journal.pdf'
-                if os.path.exists(journal_path):
-                    file_size = os.path.getsize(journal_path)
-                    # Only attach if file is under 10MB to avoid email blocks
-                    if file_size < 10 * 1024 * 1024:  # 10MB limit
-                        with open(journal_path, 'rb') as f:
-                            journal_data = f.read()
-                        journal_attachment = Attachment(
-                            FileContent(base64.b64encode(journal_data).decode()),
-                            FileName("30-Day-Recovery-Journal-by-D-Bailey.pdf"),
-                            FileType("application/pdf"),
-                            Disposition("attachment")
-                        )
-                        mail.add_attachment(journal_attachment)
-                    else:
-                        logging.info(f"Journal PDF too large ({file_size} bytes) - skipping attachment")
-                else:
-                    logging.info("Journal PDF not found - skipping attachment")
-            except Exception as e:
-                logging.warning(f"Could not attach journal PDF: {e}")
+            # Note: 30-Day Recovery Journal is now a premium subscription service only
 
         except Exception as e:
             logging.error(f"Error adding attachments: {e}")
