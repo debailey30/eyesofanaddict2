@@ -57,8 +57,9 @@ def send_welcome_email(to_email, subscriber_name=None):
                 
                 <div class="highlight">
                     <h3>🎁 Your Welcome Package is Here!</h3>
-                    <p>I've attached three essential recovery resources created from real recovery experience:</p>
+                    <p>I've attached four essential recovery resources created from real recovery experience:</p>
                     <ul>
+                        <li><strong>30-Day Recovery Journal</strong> - The complete journal (Book 1 of 3) for your critical first 30 days</li>
                         <li><strong>Welcome Guide</strong> - Everything you need to know about our community and getting started</li>
                         <li><strong>Daily Affirmations</strong> - 20 powerful affirmations for every stage of recovery</li>
                         <li><strong>Milestone Tracker</strong> - Celebrate your progress from day 1 to years of recovery</li>
@@ -119,11 +120,12 @@ def send_welcome_email(to_email, subscriber_name=None):
         
         YOUR WELCOME PACKAGE:
         
-        I've attached three essential recovery resources:
+        I've attached four essential recovery resources:
         
-        1. Welcome Guide - Everything you need to know about getting started
-        2. Daily Affirmations - 20 powerful affirmations for your recovery journey  
-        3. Milestone Tracker - Celebrate your progress from day 1 onwards
+        1. 30-Day Recovery Journal - The complete journal (Book 1 of 3) for your critical first 30 days
+        2. Welcome Guide - Everything you need to know about getting started
+        3. Daily Affirmations - 20 powerful affirmations for your recovery journey  
+        4. Milestone Tracker - Celebrate your progress from day 1 onwards
         
         WHAT MAKES US DIFFERENT:
         
@@ -192,6 +194,20 @@ def send_welcome_email(to_email, subscriber_name=None):
                 Disposition("attachment")
             )
             mail.add_attachment(tracker_attachment)
+
+            # 30-Day Recovery Journal (PDF)
+            try:
+                with open('static/downloads/30-day-recovery-journal.pdf', 'rb') as f:
+                    journal_data = f.read()
+                journal_attachment = Attachment(
+                    FileContent(base64.b64encode(journal_data).decode()),
+                    FileName("30-Day-Recovery-Journal-by-D-Bailey.pdf"),
+                    FileType("application/pdf"),
+                    Disposition("attachment")
+                )
+                mail.add_attachment(journal_attachment)
+            except Exception as e:
+                logging.warning(f"Could not attach journal PDF: {e}")
 
         except Exception as e:
             logging.error(f"Error adding attachments: {e}")
