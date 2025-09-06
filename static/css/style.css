@@ -74,9 +74,12 @@ section {
     --recovery-dark: #2c3e50;
 }
 
-/* Navigation without background image */
+/* Navigation with background */
 nav {
-    background: #2c3e50;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../images/hero-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     position: relative;
 }
 
