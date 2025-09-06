@@ -9,8 +9,7 @@ body {
 /* Hero Section */
 header.hero {
     padding: 2rem;
-    background: white;
-    border-radius: 0 0 1rem 1rem;
+    background: none;
 }
 
 .hero-content {
