@@ -10,14 +10,17 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="container-fluid">
+    <nav class="container-fluid" style="position: relative;">
         <ul>
             <li>
-                <a href="{{ url_for('index') }}" style="text-decoration: none; color: inherit;">
-                    <!-- Logo moved to banner -->
-                </a>
+                <!-- Navigation links only -->
             </li>
         </ul>
+        <!-- Logo positioned at bottom-left of navigation background -->
+        <div style="position: absolute; bottom: 10px; left: 20px; display: flex; align-items: center;">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Eyes of an Addict Logo" style="height: 32px; margin-right: 8px; filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.7));">
+            <strong style="color: white; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); font-size: 0.9rem;">Eyes of an Addict</strong>
+        </div>
         <ul>
             <li><a href="{{ url_for('index') }}#features">Features</a></li>
             <li><a href="{{ url_for('products') }}">Shop</a></li>
