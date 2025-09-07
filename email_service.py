@@ -103,7 +103,7 @@ def send_welcome_email(to_email, subscriber_name=None):
                 
                 <p>With recovery pride,<br>
                 <strong>D. Bailey, CPRSS</strong><br>
-                <em>Eyes of an Addict - Recovery Community</em></p>
+                <em>Certified Peer Recovery Support Specialist</em></p>
             </div>
             
             <div class="footer">
@@ -150,7 +150,7 @@ def send_welcome_email(to_email, subscriber_name=None):
         One day at a time,
         
         D. Bailey, CPRSS
-        Eyes of an Addict - Recovery Community
+        Certified Peer Recovery Support Specialist
         
         Questions? Email us at info@eyesofanaddict.online anytime!
         """
