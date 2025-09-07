@@ -65,18 +65,54 @@ class User(UserMixin, db.Model):
         return f'<User {self.email}>'
 
 class JournalEntry(db.Model):
-    """Model for individual journal entries"""
+    """Model for individual journal entries with enhanced content storage"""
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     day_number = db.Column(db.Integer, nullable=False)  # Day 1-30
-    content = db.Column(db.Text, nullable=True)
+    
+    # Enhanced content fields for comprehensive journaling
+    daily_reflection = db.Column(db.Text, nullable=True)  # Main reflection content
+    gratitude_items = db.Column(db.Text, nullable=True)  # Gratitude list (JSON or text)
+    challenges_faced = db.Column(db.Text, nullable=True)  # Daily challenges
+    wins_celebrations = db.Column(db.Text, nullable=True)  # Daily wins/celebrations
+    goals_tomorrow = db.Column(db.Text, nullable=True)  # Goals for next day
     mood_rating = db.Column(db.Integer, nullable=True)  # 1-10 scale
+    energy_level = db.Column(db.Integer, nullable=True)  # 1-10 scale
+    sleep_quality = db.Column(db.Integer, nullable=True)  # 1-10 scale
+    trigger_notes = db.Column(db.Text, nullable=True)  # Trigger awareness notes
+    coping_strategies = db.Column(db.Text, nullable=True)  # Strategies used today
+    support_connections = db.Column(db.Text, nullable=True)  # People connected with
+    
+    # Progress tracking
     completed = db.Column(db.Boolean, default=False)
+    time_spent_minutes = db.Column(db.Integer, nullable=True)  # Time spent journaling
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Relationship
     user = db.relationship('User', backref=db.backref('journal_entries', lazy=True))
+    
+    def get_completion_percentage(self):
+        """Calculate how complete this journal entry is based on filled fields"""
+        total_fields = 10  # Number of main content fields
+        filled_fields = 0
+        
+        fields_to_check = [
+            self.daily_reflection, self.gratitude_items, self.challenges_faced,
+            self.wins_celebrations, self.goals_tomorrow, self.trigger_notes,
+            self.coping_strategies, self.support_connections
+        ]
+        
+        for field in fields_to_check:
+            if field and field.strip():
+                filled_fields += 1
+        
+        if self.mood_rating is not None:
+            filled_fields += 1
+        if self.energy_level is not None:
+            filled_fields += 1
+            
+        return int((filled_fields / total_fields) * 100)
     
     def __repr__(self):
         return f'<JournalEntry Day {self.day_number} for User {self.user_id}>'

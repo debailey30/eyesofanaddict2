@@ -269,13 +269,103 @@ def subscription_info():
 @app.route('/recovery-journal')
 @login_required
 def recovery_journal():
-    """Serve the full 79-page recovery journal to subscribers"""
+    """Interactive recovery journal interface"""
     # Check subscription status
     if not current_user.has_active_subscription():
         flash('Your subscription is not active. Please subscribe to access the recovery journal.', 'error')
         return redirect(url_for('subscription_info'))
     
-    # Serve the professional 79-page recovery journal
+    # Get the current day or default to day 1
+    current_day = request.args.get('day', current_user.current_day, type=int)
+    if current_day < 1 or current_day > 30:
+        current_day = 1
+    
+    # Get or create journal entry for this day
+    entry = JournalEntry.query.filter_by(user_id=current_user.id, day_number=current_day).first()
+    if not entry:
+        entry = JournalEntry(user_id=current_user.id, day_number=current_day)
+        db.session.add(entry)
+        db.session.commit()
+    
+    # Get all entries for progress overview
+    all_entries = JournalEntry.query.filter_by(user_id=current_user.id).order_by(JournalEntry.day_number).all()
+    
+    return render_template('interactive_journal.html', 
+                         entry=entry, 
+                         current_day=current_day, 
+                         all_entries=all_entries,
+                         current_user=current_user)
+
+@app.route('/save-journal-entry', methods=['POST'])
+@login_required
+def save_journal_entry():
+    """Save journal entry via AJAX"""
+    if not current_user.has_active_subscription():
+        return {'success': False, 'error': 'Subscription required'}, 403
+    
+    day_number = request.form.get('day_number', type=int)
+    if not day_number or day_number < 1 or day_number > 30:
+        return {'success': False, 'error': 'Invalid day number'}, 400
+    
+    # Get or create entry
+    entry = JournalEntry.query.filter_by(user_id=current_user.id, day_number=day_number).first()
+    if not entry:
+        entry = JournalEntry(user_id=current_user.id, day_number=day_number)
+        db.session.add(entry)
+    
+    # Update entry fields
+    entry.daily_reflection = request.form.get('daily_reflection', '').strip()
+    entry.gratitude_items = request.form.get('gratitude_items', '').strip()
+    entry.challenges_faced = request.form.get('challenges_faced', '').strip()
+    entry.wins_celebrations = request.form.get('wins_celebrations', '').strip()
+    entry.goals_tomorrow = request.form.get('goals_tomorrow', '').strip()
+    entry.trigger_notes = request.form.get('trigger_notes', '').strip()
+    entry.coping_strategies = request.form.get('coping_strategies', '').strip()
+    entry.support_connections = request.form.get('support_connections', '').strip()
+    
+    # Update ratings
+    entry.mood_rating = request.form.get('mood_rating', type=int)
+    entry.energy_level = request.form.get('energy_level', type=int)
+    entry.sleep_quality = request.form.get('sleep_quality', type=int)
+    
+    # Mark as completed if significant content is present
+    completion_percentage = entry.get_completion_percentage()
+    entry.completed = completion_percentage >= 50  # Consider 50%+ as completed
+    entry.updated_date = datetime.utcnow()
+    
+    try:
+        db.session.commit()
+        
+        # Update user progress
+        if entry.completed and current_user.current_day == day_number:
+            current_user.current_day = min(day_number + 1, 30)
+            current_user.days_completed = JournalEntry.query.filter_by(
+                user_id=current_user.id, completed=True
+            ).count()
+            current_user.last_activity = datetime.utcnow()
+            db.session.commit()
+        
+        return {
+            'success': True, 
+            'completion_percentage': completion_percentage,
+            'is_completed': entry.completed,
+            'message': 'Entry saved successfully!'
+        }
+    except Exception as e:
+        db.session.rollback()
+        logging.error(f"Error saving journal entry: {e}")
+        return {'success': False, 'error': 'Failed to save entry'}, 500
+
+@app.route('/journal-pdf')
+@login_required 
+def journal_pdf():
+    """Download the full 79-page PDF journal guide"""
+    # Check subscription status
+    if not current_user.has_active_subscription():
+        flash('Your subscription is not active. Please subscribe to access the recovery journal.', 'error')
+        return redirect(url_for('subscription_info'))
+    
+    # Serve the professional 79-page recovery journal as reference
     return send_from_directory('static/downloads', 'recovery-journal-full.pdf', as_attachment=False)
 
 @app.route('/admin/layout')

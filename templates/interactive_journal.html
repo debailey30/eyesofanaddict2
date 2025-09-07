@@ -1,0 +1,418 @@
+{% extends "base.html" %}
+
+{% block title %}Day {{ current_day }} Recovery Journal | Eyes of an Addict{% endblock %}
+
+{% block content %}
+<main class="container">
+    <header style="text-align: center; margin: 2rem 0;">
+        <h1>📖 Recovery Journal - Day {{ current_day }}</h1>
+        <p>Your personal space for reflection, growth, and recovery</p>
+        
+        <!-- Progress indicator -->
+        <div style="margin: 1rem 0;">
+            <div style="background: #f0f0f0; border-radius: 10px; overflow: hidden; max-width: 300px; margin: 0 auto;">
+                <div style="width: {{ entry.get_completion_percentage() }}%; background: linear-gradient(135deg, var(--recovery-green), var(--recovery-blue)); height: 8px; transition: width 0.3s ease;"></div>
+            </div>
+            <small id="completion-text">{{ entry.get_completion_percentage() }}% Complete</small>
+        </div>
+        
+        <!-- Day navigation -->
+        <div style="margin: 2rem 0; display: flex; justify-content: center; gap: 1rem; align-items: center; flex-wrap: wrap;">
+            {% if current_day > 1 %}
+                <a href="{{ url_for('recovery_journal', day=current_day-1) }}" role="button" class="secondary" style="font-size: 0.9rem;">← Day {{ current_day-1 }}</a>
+            {% endif %}
+            
+            <select id="daySelector" onchange="navigateToDay(this.value)" style="padding: 0.5rem; border-radius: 0.3rem;">
+                {% for i in range(1, 31) %}
+                    <option value="{{ i }}" {% if i == current_day %}selected{% endif %}>Day {{ i }}</option>
+                {% endfor %}
+            </select>
+            
+            {% if current_day < 30 %}
+                <a href="{{ url_for('recovery_journal', day=current_day+1) }}" role="button" class="secondary" style="font-size: 0.9rem;">Day {{ current_day+1 }} →</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Journal Form -->
+    <form id="journalForm" style="max-width: 800px; margin: 0 auto;">
+        <input type="hidden" name="day_number" value="{{ current_day }}">
+        
+        <!-- Daily Reflection Section -->
+        <section style="margin: 3rem 0; padding: 2rem; background: #f8f9fa; border-radius: 0.5rem;">
+            <h2 style="color: var(--recovery-blue); margin-bottom: 1rem;">💭 Daily Reflection</h2>
+            <label for="daily_reflection">How are you feeling today? What's on your mind about your recovery journey?</label>
+            <textarea name="daily_reflection" id="daily_reflection" rows="6" 
+                      placeholder="Take your time to reflect on your day, your feelings, and your recovery progress..."
+                      style="width: 100%; margin: 0.5rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 0.3rem;">{{ entry.daily_reflection or '' }}</textarea>
+        </section>
+
+        <!-- Gratitude Section -->
+        <section style="margin: 3rem 0; padding: 2rem; background: #fff3cd; border-radius: 0.5rem;">
+            <h2 style="color: var(--recovery-green); margin-bottom: 1rem;">🙏 Daily Gratitude</h2>
+            <label for="gratitude_items">What are 3 things you're grateful for today?</label>
+            <textarea name="gratitude_items" id="gratitude_items" rows="4" 
+                      placeholder="1. &#10;2. &#10;3. &#10;&#10;Big or small, every bit of gratitude counts..."
+                      style="width: 100%; margin: 0.5rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 0.3rem;">{{ entry.gratitude_items or '' }}</textarea>
+        </section>
+
+        <!-- Challenges & Wins Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 3rem 0;">
+            <!-- Challenges -->
+            <section style="padding: 2rem; background: #ffe6e6; border-radius: 0.5rem;">
+                <h3 style="color: var(--recovery-orange); margin-bottom: 1rem;">⚡ Today's Challenges</h3>
+                <label for="challenges_faced">What challenges did you face today?</label>
+                <textarea name="challenges_faced" id="challenges_faced" rows="4" 
+                          placeholder="Be honest about your struggles - they're part of the journey..."
+                          style="width: 100%; margin: 0.5rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 0.3rem;">{{ entry.challenges_faced or '' }}</textarea>
+            </section>
+
+            <!-- Wins -->
+            <section style="padding: 2rem; background: #e6ffe6; border-radius: 0.5rem;">
+                <h3 style="color: var(--recovery-green); margin-bottom: 1rem;">🏆 Today's Wins</h3>
+                <label for="wins_celebrations">What victories can you celebrate today?</label>
+                <textarea name="wins_celebrations" id="wins_celebrations" rows="4" 
+                          placeholder="No win is too small to celebrate - every step counts..."
+                          style="width: 100%; margin: 0.5rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 0.3rem;">{{ entry.wins_celebrations or '' }}</textarea>
+            </section>
+        </div>
+
+        <!-- Mood & Wellness Tracking -->
+        <section style="margin: 3rem 0; padding: 2rem; background: #f0f8ff; border-radius: 0.5rem;">
+            <h2 style="color: var(--recovery-purple); margin-bottom: 1rem;">📊 Wellness Check-In</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                <!-- Mood Rating -->
+                <div>
+                    <label for="mood_rating">Overall Mood (1-10)</label>
+                    <input type="range" name="mood_rating" id="mood_rating" min="1" max="10" 
+                           value="{{ entry.mood_rating or 5 }}" 
+                           oninput="updateSliderValue('mood_rating', this.value)"
+                           style="width: 100%; margin: 0.5rem 0;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                        <span>😢 Low</span>
+                        <span id="mood_rating_value">{{ entry.mood_rating or 5 }}</span>
+                        <span>😊 High</span>
+                    </div>
+                </div>
+
+                <!-- Energy Level -->
+                <div>
+                    <label for="energy_level">Energy Level (1-10)</label>
+                    <input type="range" name="energy_level" id="energy_level" min="1" max="10" 
+                           value="{{ entry.energy_level or 5 }}" 
+                           oninput="updateSliderValue('energy_level', this.value)"
+                           style="width: 100%; margin: 0.5rem 0;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                        <span>🔋 Drained</span>
+                        <span id="energy_level_value">{{ entry.energy_level or 5 }}</span>
+                        <span>⚡ Energized</span>
+                    </div>
+                </div>
+
+                <!-- Sleep Quality -->
+                <div>
+                    <label for="sleep_quality">Sleep Quality (1-10)</label>
+                    <input type="range" name="sleep_quality" id="sleep_quality" min="1" max="10" 
+                           value="{{ entry.sleep_quality or 5 }}" 
+                           oninput="updateSliderValue('sleep_quality', this.value)"
+                           style="width: 100%; margin: 0.5rem 0;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                        <span>😴 Poor</span>
+                        <span id="sleep_quality_value">{{ entry.sleep_quality or 5 }}</span>
+                        <span>🌙 Excellent</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recovery Tools Section -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0;">
+            <!-- Triggers & Coping -->
+            <section style="padding: 2rem; background: #fff0f5; border-radius: 0.5rem;">
+                <h3 style="color: var(--recovery-purple); margin-bottom: 1rem;">🧠 Trigger Awareness</h3>
+                <label for="trigger_notes">What triggers did you notice today? How did you handle them?</label>
+                <textarea name="trigger_notes" id="trigger_notes" rows="4" 
+                          placeholder="Awareness is the first step to management..."
+                          style="width: 100%; margin: 0.5rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 0.3rem;">{{ entry.trigger_notes or '' }}</textarea>
+            </section>
+
+            <!-- Coping Strategies -->
+            <section style="padding: 2rem; background: #f0fff0; border-radius: 0.5rem;">
+                <h3 style="color: var(--recovery-green); margin-bottom: 1rem;">🛠️ Coping Strategies</h3>
+                <label for="coping_strategies">What healthy coping strategies did you use today?</label>
+                <textarea name="coping_strategies" id="coping_strategies" rows="4" 
+                          placeholder="Exercise, meditation, calling a friend, deep breathing..."
+                          style="width: 100%; margin: 0.5rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 0.3rem;">{{ entry.coping_strategies or '' }}</textarea>
+            </section>
+        </div>
+
+        <!-- Support & Future Planning -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 3rem 0;">
+            <!-- Support Connections -->
+            <section style="padding: 2rem; background: #f5f5ff; border-radius: 0.5rem;">
+                <h3 style="color: var(--recovery-blue); margin-bottom: 1rem;">🤝 Support Connections</h3>
+                <label for="support_connections">Who did you connect with today? How did they support you?</label>
+                <textarea name="support_connections" id="support_connections" rows="4" 
+                          placeholder="Family, friends, support groups, therapists, sponsors..."
+                          style="width: 100%; margin: 0.5rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 0.3rem;">{{ entry.support_connections or '' }}</textarea>
+            </section>
+
+            <!-- Tomorrow's Goals -->
+            <section style="padding: 2rem; background: #fffacd; border-radius: 0.5rem;">
+                <h3 style="color: var(--recovery-orange); margin-bottom: 1rem;">🎯 Tomorrow's Goals</h3>
+                <label for="goals_tomorrow">What are your goals for tomorrow?</label>
+                <textarea name="goals_tomorrow" id="goals_tomorrow" rows="4" 
+                          placeholder="Set 1-3 realistic, achievable goals for tomorrow..."
+                          style="width: 100%; margin: 0.5rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 0.3rem;">{{ entry.goals_tomorrow or '' }}</textarea>
+            </section>
+        </div>
+
+        <!-- Save & Navigation Actions -->
+        <section style="text-align: center; margin: 4rem 0; padding: 2rem; background: #f8f9fa; border-radius: 0.5rem;">
+            <div id="save-status" style="margin-bottom: 1rem; font-weight: bold;"></div>
+            
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <button type="button" onclick="saveEntry()" role="button" style="background: var(--recovery-green); color: white; border: none;">
+                    💾 Save Progress
+                </button>
+                <a href="{{ url_for('dashboard') }}" role="button" class="secondary">
+                    🏠 Back to Dashboard
+                </a>
+                <a href="{{ url_for('journal_pdf') }}" role="button" class="secondary" target="_blank">
+                    📄 View PDF Guide
+                </a>
+            </div>
+            
+            <div style="margin-top: 2rem;">
+                <small style="color: #666;">
+                    💡 Your journal entries are automatically saved as you type. 
+                    Take your time and be honest with yourself - this is your safe space.
+                </small>
+            </div>
+        </section>
+    </form>
+
+    <!-- Quick Progress Overview -->
+    <section style="margin: 4rem 0; padding: 2rem; background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 0.5rem;">
+        <h3 style="text-align: center; margin-bottom: 2rem;">📈 Your 30-Day Progress</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 0.5rem; max-width: 600px; margin: 0 auto;">
+            {% for day_entry in all_entries %}
+                <div style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;
+                           {% if day_entry.completed %}
+                               background: var(--recovery-green); color: white;
+                           {% elif day_entry.day_number == current_day %}
+                               background: var(--recovery-blue); color: white;
+                           {% else %}
+                               background: #f0f0f0; color: #666;
+                           {% endif %}">
+                    {{ day_entry.day_number }}
+                </div>
+            {% endfor %}
+        </div>
+        <div style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: #666;">
+            <span style="color: var(--recovery-green);">● Completed</span> | 
+            <span style="color: var(--recovery-blue);">● Current</span> | 
+            <span style="color: #666;">● Upcoming</span>
+        </div>
+    </section>
+</main>
+
+<style>
+/* Auto-save indicator */
+.save-indicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem;
+    font-size: 0.9rem;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.save-indicator.saving {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.save-indicator.saved {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.save-indicator.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Enhanced form styling */
+textarea {
+    resize: vertical;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+}
+
+textarea:focus {
+    border-color: var(--recovery-blue) !important;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(65, 105, 225, 0.2);
+}
+
+/* Slider styling */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    border-radius: 4px;
+    background: #ddd;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--recovery-blue);
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--recovery-blue);
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+</style>
+
+<script>
+let saveTimeout;
+let isAutoSaving = false;
+
+// Auto-save functionality
+function autoSave() {
+    if (isAutoSaving) return;
+    
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+        saveEntry(true); // Silent auto-save
+    }, 2000); // Save 2 seconds after user stops typing
+}
+
+// Add auto-save listeners to all form inputs
+document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('#journalForm textarea, #journalForm input');
+    inputs.forEach(input => {
+        input.addEventListener('input', autoSave);
+    });
+});
+
+// Save journal entry
+function saveEntry(silent = false) {
+    if (isAutoSaving && silent) return;
+    
+    isAutoSaving = true;
+    const formData = new FormData(document.getElementById('journalForm'));
+    
+    if (!silent) {
+        showSaveIndicator('saving', '💾 Saving...');
+    }
+    
+    fetch('/save-journal-entry', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (!silent) {
+                showSaveIndicator('saved', '✅ Saved!');
+                document.getElementById('save-status').innerHTML = 
+                    `<span style="color: var(--recovery-green);">${data.message}</span>`;
+            }
+            
+            // Update completion percentage
+            updateCompletionBar(data.completion_percentage);
+            
+            // Update save indicator briefly
+            if (silent) {
+                showSaveIndicator('saved', '💾 Auto-saved', 1000);
+            }
+        } else {
+            showSaveIndicator('error', '❌ Save failed');
+            document.getElementById('save-status').innerHTML = 
+                `<span style="color: #dc3545;">Error: ${data.error}</span>`;
+        }
+    })
+    .catch(error => {
+        console.error('Save error:', error);
+        showSaveIndicator('error', '❌ Save failed');
+        document.getElementById('save-status').innerHTML = 
+            `<span style="color: #dc3545;">Error saving entry. Please try again.</span>`;
+    })
+    .finally(() => {
+        isAutoSaving = false;
+    });
+}
+
+// Show save indicator
+function showSaveIndicator(type, message, duration = 3000) {
+    let indicator = document.getElementById('save-indicator');
+    if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.id = 'save-indicator';
+        indicator.className = 'save-indicator';
+        document.body.appendChild(indicator);
+    }
+    
+    indicator.className = `save-indicator ${type}`;
+    indicator.textContent = message;
+    indicator.style.display = 'block';
+    
+    setTimeout(() => {
+        indicator.style.display = 'none';
+    }, duration);
+}
+
+// Update completion progress bar
+function updateCompletionBar(percentage) {
+    const progressBar = document.querySelector('[style*="width:"]');
+    const progressText = document.getElementById('completion-text');
+    
+    if (progressBar) {
+        progressBar.style.width = percentage + '%';
+    }
+    if (progressText) {
+        progressText.textContent = percentage + '% Complete';
+    }
+}
+
+// Update slider values
+function updateSliderValue(sliderId, value) {
+    document.getElementById(sliderId + '_value').textContent = value;
+}
+
+// Navigate to different day
+function navigateToDay(day) {
+    window.location.href = `/recovery-journal?day=${day}`;
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(event) {
+    // Ctrl+S to save
+    if (event.ctrlKey && event.key === 's') {
+        event.preventDefault();
+        saveEntry();
+    }
+});
+</script>
+{% endblock %}
