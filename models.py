@@ -118,6 +118,22 @@ class JournalEntry(db.Model):
     def __repr__(self):
         return f'<JournalEntry Day {self.day_number} for User {self.user_id}>'
 
+class PDFAnnotation(db.Model):
+    """Model for PDF page annotations and drawings"""
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    page_number = db.Column(db.Integer, nullable=False)  # Page 1-79
+    notes = db.Column(db.Text, nullable=True)  # Text notes for this page
+    drawing_data = db.Column(db.Text, nullable=True)  # Canvas drawing data as base64
+    created_date = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_date = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationship
+    user = db.relationship('User', backref=db.backref('pdf_annotations', lazy=True))
+    
+    def __repr__(self):
+        return f'<PDFAnnotation Page {self.page_number} for User {self.user_id}>'
+
 class SiteSettings(db.Model):
     """Model for customizable site layout and styling"""
     id = db.Column(db.Integer, primary_key=True)

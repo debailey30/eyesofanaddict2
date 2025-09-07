@@ -360,14 +360,80 @@ def save_journal_entry():
 @app.route('/journal-pdf')
 @login_required 
 def journal_pdf():
+    """Interactive PDF journal viewer with drawing and navigation"""
+    # Check subscription status
+    if not current_user.has_active_subscription():
+        flash('Your subscription is not active. Please subscribe to access the recovery journal.', 'error')
+        return redirect(url_for('subscription_info'))
+    
+    # Get current page from URL parameter
+    current_page = request.args.get('page', 1, type=int)
+    if current_page < 1 or current_page > 79:
+        current_page = 1
+    
+    # Get or create PDF annotation entry for this page
+    pdf_entry = PDFAnnotation.query.filter_by(
+        user_id=current_user.id, 
+        page_number=current_page
+    ).first()
+    if not pdf_entry:
+        pdf_entry = PDFAnnotation(user_id=current_user.id, page_number=current_page)
+        db.session.add(pdf_entry)
+        db.session.commit()
+    
+    return render_template('pdf_journal.html', 
+                         current_page=current_page, 
+                         total_pages=79,
+                         pdf_entry=pdf_entry,
+                         current_user=current_user)
+
+@app.route('/journal-pdf-download')
+@login_required 
+def journal_pdf_download():
     """Download the full 79-page PDF journal guide"""
     # Check subscription status
     if not current_user.has_active_subscription():
         flash('Your subscription is not active. Please subscribe to access the recovery journal.', 'error')
         return redirect(url_for('subscription_info'))
     
-    # Serve the professional 79-page recovery journal as reference
-    return send_from_directory('static/downloads', 'recovery-journal-full.pdf', as_attachment=False)
+    # Serve the professional 79-page recovery journal as download
+    return send_from_directory('static/downloads', 'recovery-journal-full.pdf', as_attachment=True)
+
+@app.route('/save-pdf-annotation', methods=['POST'])
+@login_required
+def save_pdf_annotation():
+    """Save PDF page annotation via AJAX"""
+    if not current_user.has_active_subscription():
+        return {'success': False, 'error': 'Subscription required'}, 403
+    
+    page_number = request.form.get('page_number', type=int)
+    if not page_number or page_number < 1 or page_number > 79:
+        return {'success': False, 'error': 'Invalid page number'}, 400
+    
+    # Get or create annotation entry
+    annotation = PDFAnnotation.query.filter_by(
+        user_id=current_user.id, 
+        page_number=page_number
+    ).first()
+    if not annotation:
+        annotation = PDFAnnotation(user_id=current_user.id, page_number=page_number)
+        db.session.add(annotation)
+    
+    # Update annotation fields
+    annotation.notes = request.form.get('notes', '').strip()
+    annotation.drawing_data = request.form.get('drawing_data', '').strip()
+    annotation.updated_date = datetime.utcnow()
+    
+    try:
+        db.session.commit()
+        return {
+            'success': True,
+            'message': 'Annotation saved successfully!'
+        }
+    except Exception as e:
+        db.session.rollback()
+        logging.error(f"Error saving PDF annotation: {e}")
+        return {'success': False, 'error': 'Failed to save annotation'}, 500
 
 @app.route('/admin/layout')
 @login_required

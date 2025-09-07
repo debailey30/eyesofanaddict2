@@ -1,0 +1,537 @@
+{% extends "base.html" %}
+
+{% block title %}PDF Journal - Page {{ current_page }} | Eyes of an Addict{% endblock %}
+
+{% block content %}
+<main class="container pdf-journal-container" id="pdfContainer">
+    <header style="text-align: center; margin: 2rem 0;">
+        <h1>📄 Recovery Journal Guide - Page {{ current_page }}</h1>
+        <p>Interactive PDF with annotation and drawing capabilities</p>
+        
+        <!-- Page navigation -->
+        <div style="margin: 2rem 0; display: flex; justify-content: center; gap: 1rem; align-items: center; flex-wrap: wrap;">
+            {% if current_page > 1 %}
+                <button onclick="navigateToPage({{ current_page-1 }})" role="button" class="secondary" style="font-size: 0.9rem;">← Page {{ current_page-1 }}</button>
+            {% endif %}
+            
+            <select id="pageSelector" onchange="navigateToPage(this.value)" style="padding: 0.5rem; border-radius: 0.3rem;">
+                {% for i in range(1, total_pages + 1) %}
+                    <option value="{{ i }}" {% if i == current_page %}selected{% endif %}>Page {{ i }}</option>
+                {% endfor %}
+            </select>
+            
+            {% if current_page < total_pages %}
+                <button onclick="navigateToPage({{ current_page+1 }})" role="button" class="secondary" style="font-size: 0.9rem;">Page {{ current_page+1 }} →</button>
+            {% endif %}
+        </div>
+        
+        <div style="text-align: center; margin: 1rem 0; color: #666; font-size: 0.9rem;">
+            💡 <strong>Swipe left/right</strong> to navigate pages | <strong>Touch & hold</strong> to draw annotations
+        </div>
+    </header>
+
+    <!-- Mode Toggle -->
+    <div style="text-align: center; margin: 2rem 0;">
+        <div class="mode-toggle" style="display: inline-flex; background: #f0f0f0; border-radius: 2rem; padding: 0.3rem;">
+            <button type="button" id="viewModeBtn" class="mode-btn active" onclick="switchMode('view')" style="padding: 0.5rem 1.5rem; border: none; border-radius: 1.5rem; background: var(--recovery-blue); color: white; cursor: pointer;">📖 View PDF</button>
+            <button type="button" id="annotateModeBtn" class="mode-btn" onclick="switchMode('annotate')" style="padding: 0.5rem 1.5rem; border: none; border-radius: 1.5rem; background: transparent; color: #666; cursor: pointer;">✏️ Annotate</button>
+        </div>
+    </div>
+
+    <!-- PDF Viewer Section -->
+    <section id="pdfViewSection" style="margin: 2rem 0; text-align: center;">
+        <div style="position: relative; display: inline-block; max-width: 100%; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 0.5rem; overflow: hidden;">
+            <iframe 
+                src="/static/downloads/recovery-journal-full.pdf#page={{ current_page }}&toolbar=0&navpanes=0&scrollbar=0" 
+                width="800" 
+                height="1000" 
+                style="border: none; display: block; margin: 0 auto; max-width: 100%;"
+                title="Recovery Journal Page {{ current_page }}">
+            </iframe>
+        </div>
+    </section>
+
+    <!-- Annotation Section -->
+    <section id="annotationSection" style="display: none; margin: 2rem 0;">
+        <form id="annotationForm" style="max-width: 800px; margin: 0 auto;">
+            <input type="hidden" name="page_number" value="{{ current_page }}">
+            <input type="hidden" name="drawing_data" id="drawingDataInput" value="{{ pdf_entry.drawing_data or '' }}">
+            
+            <!-- Page Notes -->
+            <div style="margin: 2rem 0; padding: 2rem; background: #f8f9fa; border-radius: 0.5rem;">
+                <h3 style="color: var(--recovery-blue); margin-bottom: 1rem;">📝 Page {{ current_page }} Notes</h3>
+                <label for="page_notes">Your thoughts, insights, or reflections on this page:</label>
+                <textarea name="notes" id="page_notes" rows="6" 
+                          placeholder="Add your personal notes, insights, or action items from this page..."
+                          style="width: 100%; margin: 0.5rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 0.3rem;">{{ pdf_entry.notes or '' }}</textarea>
+            </div>
+
+            <!-- Drawing Canvas -->
+            <div style="margin: 2rem 0; padding: 2rem; background: #fff; border-radius: 0.5rem; border: 2px solid #e0e0e0;">
+                <h3 style="color: var(--recovery-purple); margin-bottom: 1rem;">🎨 Draw & Annotate</h3>
+                <p style="margin-bottom: 1rem; color: #666;">Draw diagrams, highlight important points, or sketch your thoughts</p>
+                
+                <div style="text-align: center; margin-bottom: 1rem;">
+                    <button type="button" onclick="clearCanvas('annotationCanvas')" style="padding: 0.5rem 1rem; background: #ff6b6b; color: white; border: none; border-radius: 0.3rem; margin-right: 1rem;">🗑️ Clear</button>
+                    <button type="button" onclick="changeDrawingColor('#000000')" style="padding: 0.5rem 1rem; background: #000; color: white; border: none; border-radius: 0.3rem; margin: 0 0.25rem;">⚫</button>
+                    <button type="button" onclick="changeDrawingColor('#2E8B57')" style="padding: 0.5rem 1rem; background: #2E8B57; color: white; border: none; border-radius: 0.3rem; margin: 0 0.25rem;">🟢</button>
+                    <button type="button" onclick="changeDrawingColor('#4169E1')" style="padding: 0.5rem 1rem; background: #4169E1; color: white; border: none; border-radius: 0.3rem; margin: 0 0.25rem;">🔵</button>
+                    <button type="button" onclick="changeDrawingColor('#9370DB')" style="padding: 0.5rem 1rem; background: #9370DB; color: white; border: none; border-radius: 0.3rem; margin: 0 0.25rem;">🟣</button>
+                    <button type="button" onclick="changeDrawingColor('#FF4500')" style="padding: 0.5rem 1rem; background: #FF4500; color: white; border: none; border-radius: 0.3rem; margin: 0 0.25rem;">🟠</button>
+                </div>
+                
+                <canvas id="annotationCanvas" width="760" height="400" 
+                        style="border: 2px solid #ddd; border-radius: 0.3rem; cursor: crosshair; display: block; margin: 0 auto; background: white; touch-action: none;">
+                </canvas>
+            </div>
+
+            <!-- Save Actions -->
+            <div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: #f8f9fa; border-radius: 0.5rem;">
+                <div id="save-status" style="margin-bottom: 1rem; font-weight: bold;"></div>
+                
+                <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                    <button type="button" onclick="saveAnnotation()" role="button" style="background: var(--recovery-green); color: white; border: none;">
+                        💾 Save Annotations
+                    </button>
+                    <a href="{{ url_for('dashboard') }}" role="button" class="secondary">
+                        🏠 Back to Dashboard
+                    </a>
+                    <a href="{{ url_for('journal_pdf_download') }}" role="button" class="secondary" target="_blank">
+                        📥 Download PDF
+                    </a>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <!-- Quick Page Overview -->
+    <section style="margin: 4rem 0; padding: 2rem; background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 0.5rem;">
+        <h3 style="text-align: center; margin-bottom: 2rem;">📖 Quick Page Navigation</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 0.5rem; max-width: 1000px; margin: 0 auto;">
+            {% for page_num in range(1, total_pages + 1) %}
+                <button onclick="navigateToPage({{ page_num }})" 
+                        style="width: 60px; height: 40px; border-radius: 0.3rem; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; border: 1px solid #ddd; cursor: pointer;
+                               {% if page_num == current_page %}
+                                   background: var(--recovery-blue); color: white; border-color: var(--recovery-blue);
+                               {% else %}
+                                   background: #f0f0f0; color: #666;
+                               {% endif %}">
+                    {{ page_num }}
+                </button>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+
+<style>
+/* Enhanced PDF Journal Styling */
+.pdf-journal-container {
+    max-width: 1200px;
+}
+
+/* Canvas and drawing styles */
+canvas {
+    touch-action: none;
+}
+
+/* Mode toggle styling */
+.mode-toggle .mode-btn {
+    transition: all 0.3s ease;
+}
+
+.mode-toggle .mode-btn:hover {
+    opacity: 0.8;
+}
+
+/* Responsive PDF viewer */
+@media (max-width: 768px) {
+    iframe {
+        width: 100% !important;
+        height: 600px !important;
+    }
+    
+    canvas {
+        width: 100% !important;
+        height: 300px !important;
+    }
+}
+
+/* Auto-save indicator styles */
+.save-indicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem;
+    font-size: 0.9rem;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.save-indicator.saving {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.save-indicator.saved {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.save-indicator.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+</style>
+
+<script>
+let currentMode = 'view';
+let isDrawing = false;
+let currentColor = '#000000';
+let lastX = 0;
+let lastY = 0;
+let saveTimeout;
+let isAutoSaving = false;
+
+// Touch/Swipe variables
+let startX = 0;
+let startY = 0;
+let isSwipeDetected = false;
+
+// Canvas reference
+let canvas;
+let ctx;
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    setupSwipeHandlers();
+    setupDrawingCanvas();
+    loadDrawingData();
+    
+    // Auto-save for text notes
+    const notesTextarea = document.getElementById('page_notes');
+    if (notesTextarea) {
+        notesTextarea.addEventListener('input', autoSave);
+    }
+});
+
+// Mode switching between view and annotate
+function switchMode(mode) {
+    currentMode = mode;
+    
+    const viewModeBtn = document.getElementById('viewModeBtn');
+    const annotateModeBtn = document.getElementById('annotateModeBtn');
+    const pdfSection = document.getElementById('pdfViewSection');
+    const annotationSection = document.getElementById('annotationSection');
+    
+    if (mode === 'view') {
+        viewModeBtn.style.background = 'var(--recovery-blue)';
+        viewModeBtn.style.color = 'white';
+        annotateModeBtn.style.background = 'transparent';
+        annotateModeBtn.style.color = '#666';
+        
+        pdfSection.style.display = 'block';
+        annotationSection.style.display = 'none';
+    } else {
+        annotateModeBtn.style.background = 'var(--recovery-purple)';
+        annotateModeBtn.style.color = 'white';
+        viewModeBtn.style.background = 'transparent';
+        viewModeBtn.style.color = '#666';
+        
+        pdfSection.style.display = 'none';
+        annotationSection.style.display = 'block';
+    }
+}
+
+// Setup swipe handlers
+function setupSwipeHandlers() {
+    const container = document.getElementById('pdfContainer');
+    
+    // Touch events
+    container.addEventListener('touchstart', handleTouchStart, { passive: false });
+    container.addEventListener('touchmove', handleTouchMove, { passive: false });
+    container.addEventListener('touchend', handleTouchEnd, { passive: false });
+    
+    // Mouse events for desktop testing
+    container.addEventListener('mousedown', handleMouseStart);
+    container.addEventListener('mousemove', handleMouseMove);
+    container.addEventListener('mouseup', handleMouseEnd);
+}
+
+function handleTouchStart(e) {
+    if (e.target.tagName === 'CANVAS') return;
+    
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    isSwipeDetected = false;
+}
+
+function handleTouchMove(e) {
+    if (e.target.tagName === 'CANVAS') return;
+    
+    if (!startX || !startY) return;
+    
+    const currentX = e.touches[0].clientX;
+    const currentY = e.touches[0].clientY;
+    
+    const diffX = startX - currentX;
+    const diffY = startY - currentY;
+    
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+        isSwipeDetected = true;
+        e.preventDefault();
+    }
+}
+
+function handleTouchEnd(e) {
+    if (e.target.tagName === 'CANVAS') return;
+    if (!isSwipeDetected) return;
+    
+    const currentPage = {{ current_page }};
+    const endX = e.changedTouches[0].clientX;
+    const diffX = startX - endX;
+    
+    if (Math.abs(diffX) > 100) {
+        if (diffX > 0 && currentPage < {{ total_pages }}) {
+            navigateToPage(currentPage + 1);
+        } else if (diffX < 0 && currentPage > 1) {
+            navigateToPage(currentPage - 1);
+        }
+    }
+    
+    startX = 0;
+    startY = 0;
+    isSwipeDetected = false;
+}
+
+// Mouse equivalents for desktop
+function handleMouseStart(e) {
+    if (e.target.tagName === 'CANVAS') return;
+    startX = e.clientX;
+    startY = e.clientY;
+}
+
+function handleMouseMove(e) {
+    if (e.target.tagName === 'CANVAS') return;
+    if (!startX) return;
+    
+    const diffX = startX - e.clientX;
+    if (Math.abs(diffX) > 50) {
+        isSwipeDetected = true;
+    }
+}
+
+function handleMouseEnd(e) {
+    if (e.target.tagName === 'CANVAS') return;
+    if (!isSwipeDetected) return;
+    
+    const currentPage = {{ current_page }};
+    const diffX = startX - e.clientX;
+    
+    if (Math.abs(diffX) > 100) {
+        if (diffX > 0 && currentPage < {{ total_pages }}) {
+            navigateToPage(currentPage + 1);
+        } else if (diffX < 0 && currentPage > 1) {
+            navigateToPage(currentPage - 1);
+        }
+    }
+    
+    startX = 0;
+    isSwipeDetected = false;
+}
+
+// Canvas drawing setup
+function setupDrawingCanvas() {
+    canvas = document.getElementById('annotationCanvas');
+    if (!canvas) return;
+    
+    ctx = canvas.getContext('2d');
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = currentColor;
+    
+    // Touch events for drawing
+    canvas.addEventListener('touchstart', startDrawing);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', stopDrawing);
+    
+    // Mouse events for drawing
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', stopDrawing);
+}
+
+function startDrawing(e) {
+    e.preventDefault();
+    isDrawing = true;
+    
+    const rect = e.target.getBoundingClientRect();
+    const x = (e.clientX || e.touches[0].clientX) - rect.left;
+    const y = (e.clientY || e.touches[0].clientY) - rect.top;
+    
+    lastX = x;
+    lastY = y;
+}
+
+function draw(e) {
+    if (!isDrawing) return;
+    e.preventDefault();
+    
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX || e.touches[0].clientX) - rect.left;
+    const y = (e.clientY || e.touches[0].clientY) - rect.top;
+    
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    
+    lastX = x;
+    lastY = y;
+    
+    autoSave();
+}
+
+function stopDrawing() {
+    isDrawing = false;
+}
+
+function clearCanvas(canvasId) {
+    if (canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        autoSave();
+    }
+}
+
+function changeDrawingColor(color) {
+    currentColor = color;
+    if (ctx) {
+        ctx.strokeStyle = color;
+    }
+}
+
+function saveCanvasData() {
+    if (canvas) {
+        const drawingData = canvas.toDataURL();
+        document.getElementById('drawingDataInput').value = drawingData;
+    }
+}
+
+function loadDrawingData() {
+    const drawingData = document.getElementById('drawingDataInput').value;
+    if (drawingData && canvas) {
+        const img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0);
+        };
+        img.src = drawingData;
+    }
+}
+
+// Auto-save functionality
+function autoSave() {
+    if (isAutoSaving) return;
+    
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+        saveCanvasData();
+        saveAnnotation(true); // Silent auto-save
+    }, 2000);
+}
+
+// Save annotation
+function saveAnnotation(silent = false) {
+    if (isAutoSaving && silent) return;
+    
+    isAutoSaving = true;
+    saveCanvasData(); // Make sure canvas data is up to date
+    
+    const formData = new FormData(document.getElementById('annotationForm'));
+    
+    if (!silent) {
+        showSaveIndicator('saving', '💾 Saving...');
+    }
+    
+    fetch('/save-pdf-annotation', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (!silent) {
+                showSaveIndicator('saved', '✅ Saved!');
+                document.getElementById('save-status').innerHTML = 
+                    `<span style="color: var(--recovery-green);">${data.message}</span>`;
+            } else {
+                showSaveIndicator('saved', '💾 Auto-saved', 1000);
+            }
+        } else {
+            showSaveIndicator('error', '❌ Save failed');
+            document.getElementById('save-status').innerHTML = 
+                `<span style="color: #dc3545;">Error: ${data.error}</span>`;
+        }
+    })
+    .catch(error => {
+        console.error('Save error:', error);
+        showSaveIndicator('error', '❌ Save failed');
+    })
+    .finally(() => {
+        isAutoSaving = false;
+    });
+}
+
+// Show save indicator
+function showSaveIndicator(type, message, duration = 3000) {
+    let indicator = document.getElementById('save-indicator');
+    if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.id = 'save-indicator';
+        indicator.className = 'save-indicator';
+        document.body.appendChild(indicator);
+    }
+    
+    indicator.className = `save-indicator ${type}`;
+    indicator.textContent = message;
+    indicator.style.display = 'block';
+    
+    setTimeout(() => {
+        indicator.style.display = 'none';
+    }, duration);
+}
+
+// Navigate to different page
+function navigateToPage(page) {
+    // Save current state before navigating
+    if (currentMode === 'annotate') {
+        saveCanvasData();
+        saveAnnotation(true);
+    }
+    
+    setTimeout(() => {
+        window.location.href = `/journal-pdf?page=${page}`;
+    }, 300);
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(event) {
+    // Ctrl+S to save
+    if (event.ctrlKey && event.key === 's') {
+        event.preventDefault();
+        saveAnnotation();
+    }
+    
+    // Arrow keys for navigation
+    if (event.key === 'ArrowLeft' && {{ current_page }} > 1) {
+        navigateToPage({{ current_page }} - 1);
+    } else if (event.key === 'ArrowRight' && {{ current_page }} < {{ total_pages }}) {
+        navigateToPage({{ current_page }} + 1);
+    }
+});
+</script>
+{% endblock %}
