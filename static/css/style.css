@@ -431,3 +431,223 @@ select:focus {
     outline: 2px solid var(--recovery-blue);
     outline-offset: 2px;
 }
+
+/* Journal Preview Styles */
+.journal-preview-section {
+    margin: 2rem 0;
+}
+
+.journal-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.journal-cover-container {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.journal-cover-container:hover {
+    transform: scale(1.05);
+}
+
+.journal-cover-image {
+    width: 200px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.preview-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.journal-cover-container:hover .preview-overlay {
+    opacity: 1;
+}
+
+.preview-btn {
+    background: rgba(74, 144, 226, 0.9);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.journal-preview-text h4 {
+    color: var(--recovery-blue);
+    margin: 0.5rem 0;
+}
+
+/* Journal Modal Styles */
+.journal-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 2% auto;
+    padding: 0;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--recovery-blue);
+}
+
+.close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: var(--recovery-blue);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.page-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.nav-btn {
+    background: var(--recovery-blue);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.nav-btn:hover {
+    background: var(--recovery-purple);
+}
+
+.nav-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.page-counter {
+    font-weight: 500;
+    color: var(--recovery-dark);
+}
+
+.journal-page-viewer {
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.journal-page-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.page-description {
+    text-align: center;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.page-description h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--recovery-blue);
+}
+
+.modal-subscription-offer {
+    border-top: 1px solid #eee;
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.subscription-card {
+    background: linear-gradient(135deg, var(--recovery-blue), var(--recovery-green));
+    color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.subscription-card h4 {
+    margin: 0 0 1rem 0;
+    font-size: 1.2rem;
+}
+
+.subscription-price {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 1rem 0;
+}
+
+.subscription-price span {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.modal-cta-btn {
+    background: white;
+    color: var(--recovery-blue);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin: 1rem 0;
+    transition: transform 0.3s ease;
+}
+
+.modal-cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}

@@ -56,19 +56,40 @@
             <h3>Your comprehensive recovery companion for the critical first 30 days</h3>
         </hgroup>
         
-        <div class="journal-features">
+        <!-- Journal Preview Section -->
+        <div class="journal-preview-section">
             <div class="grid">
-                <div class="feature">
-                    <h4><i data-feather="book-open"></i> Interactive Digital Journal</h4>
-                    <p>Daily prompts, reflections, and progress tracking designed by recovery experts</p>
+                <div class="journal-preview">
+                    <div class="journal-cover-container">
+                        <img src="{{ url_for('static', filename='images/journal-cover.jpg') }}" 
+                             alt="30-Day Recovery Journal Cover" 
+                             class="journal-cover-image"
+                             onclick="openJournalModal()">
+                        <div class="preview-overlay">
+                            <button class="preview-btn" onclick="openJournalModal()">
+                                <i data-feather="eye"></i> Preview Pages
+                            </button>
+                        </div>
+                    </div>
+                    <div class="journal-preview-text">
+                        <h4>Click to Preview Inside</h4>
+                        <p>See actual pages from the recovery journal and discover how it can transform your first 30 days.</p>
+                    </div>
                 </div>
-                <div class="feature">
-                    <h4><i data-feather="users"></i> Personal Recovery Dashboard</h4>
-                    <p>Your private space to track milestones, mood, and growth patterns</p>
-                </div>
-                <div class="feature">
-                    <h4><i data-feather="download"></i> Save Your Progress</h4>
-                    <p>Individual login access with secure cloud storage for your recovery journey</p>
+                
+                <div class="journal-features">
+                    <div class="feature">
+                        <h4><i data-feather="book-open"></i> Interactive Digital Journal</h4>
+                        <p>Daily prompts, reflections, and progress tracking designed by recovery experts</p>
+                    </div>
+                    <div class="feature">
+                        <h4><i data-feather="users"></i> Personal Recovery Dashboard</h4>
+                        <p>Your private space to track milestones, mood, and growth patterns</p>
+                    </div>
+                    <div class="feature">
+                        <h4><i data-feather="download"></i> Save Your Progress</h4>
+                        <p>Individual login access with secure cloud storage for your recovery journey</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -91,6 +112,47 @@
         </div>
     </article>
 </section>
+
+<!-- Journal Preview Modal -->
+<div id="journalModal" class="journal-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>30-Day Recovery Journal Preview</h3>
+            <span class="close" onclick="closeJournalModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="journal-pages-container">
+                <div class="page-navigation">
+                    <button class="nav-btn" onclick="previousPage()" id="prevBtn">❮ Previous</button>
+                    <span class="page-counter">Page <span id="currentPage">1</span> of <span id="totalPages">5</span></span>
+                    <button class="nav-btn" onclick="nextPage()" id="nextBtn">Next ❯</button>
+                </div>
+                
+                <div class="journal-page-viewer">
+                    <img id="currentJournalPage" 
+                         src="{{ url_for('static', filename='images/journal-cover.jpg') }}" 
+                         alt="Journal Page" 
+                         class="journal-page-image">
+                </div>
+                
+                <div class="page-description">
+                    <h4 id="pageTitle">Recovery Journal Cover</h4>
+                    <p id="pageDescription">Your comprehensive guide through the critical first 30 days of recovery</p>
+                </div>
+            </div>
+            
+            <div class="modal-subscription-offer">
+                <div class="subscription-card">
+                    <h4>Ready to Start Your Recovery Journey?</h4>
+                    <div class="subscription-price">$19.99<span>/month</span></div>
+                    <p>Get access to the complete interactive journal, personal dashboard, and progress tracking.</p>
+                    <a href="{{ url_for('register') }}" role="button" class="modal-cta-btn">Subscribe Now</a>
+                    <p><small>7-day free trial • Cancel anytime</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Additional Offerings -->
 <section id="additional-offerings" class="container">

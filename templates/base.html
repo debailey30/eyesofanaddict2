@@ -69,5 +69,98 @@
 
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script>feather.replace()</script>
+    
+    <!-- Journal Preview Modal JavaScript -->
+    <script>
+        // Journal page data
+        const journalPages = [
+            {
+                image: 'journal-cover.jpg',
+                title: 'Recovery Journal Cover',
+                description: 'Your comprehensive guide through the critical first 30 days of recovery'
+            },
+            {
+                image: 'journal-page1.jpg',
+                title: 'Day 1: Starting Your Journey',
+                description: 'Setting intentions and understanding what recovery means to you'
+            },
+            {
+                image: 'journal-page2.jpg',
+                title: 'Week 1: Building Foundation',
+                description: 'Daily check-ins, mood tracking, and establishing healthy routines'
+            },
+            {
+                image: 'journal-page3.jpg',
+                title: 'Week 2: Developing Strength',
+                description: 'Coping strategies, trigger identification, and support network building'
+            },
+            {
+                image: 'journal-page4.jpg',
+                title: 'Progress Tracking',
+                description: 'Milestone celebrations, reflection exercises, and goal setting'
+            }
+        ];
+
+        let currentPageIndex = 0;
+
+        function openJournalModal() {
+            document.getElementById('journalModal').style.display = 'block';
+            updatePage();
+        }
+
+        function closeJournalModal() {
+            document.getElementById('journalModal').style.display = 'none';
+        }
+
+        function nextPage() {
+            if (currentPageIndex < journalPages.length - 1) {
+                currentPageIndex++;
+                updatePage();
+            }
+        }
+
+        function previousPage() {
+            if (currentPageIndex > 0) {
+                currentPageIndex--;
+                updatePage();
+            }
+        }
+
+        function updatePage() {
+            const page = journalPages[currentPageIndex];
+            const baseUrl = '{{ url_for("static", filename="images/") }}';
+            
+            document.getElementById('currentJournalPage').src = baseUrl + page.image;
+            document.getElementById('pageTitle').textContent = page.title;
+            document.getElementById('pageDescription').textContent = page.description;
+            document.getElementById('currentPage').textContent = currentPageIndex + 1;
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentPageIndex === 0;
+            document.getElementById('nextBtn').disabled = currentPageIndex === journalPages.length - 1;
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('journalModal');
+            if (event.target === modal) {
+                closeJournalModal();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            const modal = document.getElementById('journalModal');
+            if (modal && modal.style.display === 'block') {
+                if (event.key === 'ArrowRight') {
+                    nextPage();
+                } else if (event.key === 'ArrowLeft') {
+                    previousPage();
+                } else if (event.key === 'Escape') {
+                    closeJournalModal();
+                }
+            }
+        });
+    </script>
 </body>
 </html>
