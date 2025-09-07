@@ -2,12 +2,13 @@ from flask import render_template, request, flash, redirect, url_for, session, s
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db
 from forms import ContactForm, EmailSubscriptionForm, RegistrationForm, LoginForm
-from models import EmailSubscriber, ContactMessage, User, JournalEntry, SiteSettings
+from models import EmailSubscriber, ContactMessage, User, JournalEntry, SiteSettings, PDFAnnotation
 from email_service import send_welcome_email
 from stripe_service import create_checkout_session, create_customer_portal_session, get_subscription_status
 import stripe
 import logging
 import os
+from datetime import datetime
 
 @app.route('/')
 def index():
