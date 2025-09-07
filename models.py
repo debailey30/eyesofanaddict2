@@ -36,6 +36,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(256), nullable=False)
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     is_active = db.Column(db.Boolean, default=True)
+    is_owner = db.Column(db.Boolean, default=False)  # Owner bypass subscription
     
     # Subscription details
     stripe_customer_id = db.Column(db.String(100), nullable=True)
@@ -58,7 +59,7 @@ class User(UserMixin, db.Model):
     
     def has_active_subscription(self):
         """Check if user has an active subscription"""
-        return self.subscription_status == 'active'
+        return self.subscription_status == 'active' or self.is_owner
     
     def __repr__(self):
         return f'<User {self.email}>'

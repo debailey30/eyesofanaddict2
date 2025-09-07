@@ -261,6 +261,31 @@ def subscription_info():
     """Information about journal subscription"""
     return render_template('subscription_info.html')
 
+@app.route('/create-owner-account')
+def create_owner_account():
+    """Create owner account for site access"""
+    # Check if owner already exists
+    existing_owner = User.query.filter_by(is_owner=True).first()
+    if existing_owner:
+        return f"Owner account already exists for {existing_owner.email}"
+    
+    # Create owner account
+    owner = User(
+        email='owner@eyesofanaddict.online',
+        name='D. Bailey',
+        is_owner=True,
+        subscription_status='active'  # Set as active for full access
+    )
+    owner.set_password('recovery2024')  # Simple password for testing
+    
+    try:
+        db.session.add(owner)
+        db.session.commit()
+        return f"Owner account created! Email: owner@eyesofanaddict.online | Password: recovery2024"
+    except Exception as e:
+        db.session.rollback()
+        return f"Error creating owner account: {e}"
+
 @app.errorhandler(404)
 def page_not_found(e):
     """Handle 404 errors"""
