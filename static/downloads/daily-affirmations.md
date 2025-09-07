@@ -1,24 +1,44 @@
-# Daily Recovery Affirmations
-**Created by D. Bailey - 5+ Years in Recovery**
+# ✨ Daily Recovery Affirmations
 
-## Morning Affirmations
+---
 
-1. **"Today I choose recovery over addiction."**
-   - I have the power to make healthy choices today.
+**Created by D. Bailey, CPRSS**  
+*5+ Years in Recovery | Certified Peer Recovery Support Specialist*
 
-2. **"I am worthy of love, respect, and recovery."**
-   - My past does not define my future.
+> *"What we think, we become. What we affirm, we manifest."*
 
-3. **"Progress, not perfection, is my goal."**
-   - Every small step forward matters.
+---
 
-4. **"I am stronger than my addiction."**
-   - I have overcome challenges before, and I can do it again.
+## 🌅 Morning Affirmations
 
-5. **"Today I will be gentle with myself."**
-   - Self-compassion is part of my healing journey.
+*Start your day with intention and strength*
 
-## Midday Check-ins
+### 🎯 **"Today I choose recovery over addiction."**
+💪 *I have the power to make healthy choices today.*
+
+---
+
+### 💎 **"I am worthy of love, respect, and recovery."**
+🌱 *My past does not define my future.*
+
+---
+
+### 📈 **"Progress, not perfection, is my goal."**
+🎉 *Every small step forward matters.*
+
+---
+
+### 💪 **"I am stronger than my addiction."**
+🏆 *I have overcome challenges before, and I can do it again.*
+
+---
+
+### 💜 **"Today I will be gentle with myself."**
+🌸 *Self-compassion is part of my healing journey.*
+
+## ☀️ Midday Check-ins
+
+*Realign your energy and refocus your intentions*
 
 6. **"I am exactly where I need to be right now."**
    - This moment is my opportunity to choose recovery.

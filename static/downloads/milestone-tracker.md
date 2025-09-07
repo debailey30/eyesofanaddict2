@@ -1,21 +1,35 @@
-# Recovery Milestone Tracker
-**Your Journey Deserves Celebration**
+# 🏆 Recovery Milestone Tracker
 
-## Daily Check-ins (First 30 Days)
+---
 
-### Week 1: Building Foundation
-- [ ] Day 1: I chose recovery today
-- [ ] Day 2: I made it through yesterday's challenges
-- [ ] Day 3: I'm developing new routines
-- [ ] Day 4: I'm learning to sit with difficult feelings
-- [ ] Day 5: I'm discovering healthy coping strategies
-- [ ] Day 6: I'm building my support network
-- [ ] Day 7: **WEEKLY MILESTONE** - I completed my first week!
+**Your Journey Deserves Celebration**  
+*Created by D. Bailey, CPRSS | Eyes of an Addict*
 
-**Week 1 Reflection:**
-- Biggest challenge: ________________________________
-- Proudest moment: _________________________________
-- What I learned: ___________________________________
+> *"Every day in recovery is a victory worth celebrating"*
+
+---
+
+## 📅 Daily Check-ins (First 30 Days)
+
+*Track your progress one day at a time*
+
+### 🌱 Week 1: Building Foundation
+
+🎯 **Day 1:** I chose recovery today  
+💪 **Day 2:** I made it through yesterday's challenges  
+🔄 **Day 3:** I'm developing new routines  
+🧘 **Day 4:** I'm learning to sit with difficult feelings  
+🛠️ **Day 5:** I'm discovering healthy coping strategies  
+🤝 **Day 6:** I'm building my support network  
+🏆 **Day 7:** **WEEKLY MILESTONE** - I completed my first week!
+
+**✨ Week 1 Reflection:**
+
+| Reflection Point | My Response |
+|------------------|-------------|
+| 🔥 Biggest challenge: | _________________________ |
+| 🌟 Proudest moment: | _________________________ |
+| 💡 What I learned: | _________________________ |
 
 ### Week 2: Strengthening Resolve
 - [ ] Day 8: I'm developing emotional resilience
