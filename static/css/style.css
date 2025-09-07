@@ -63,35 +63,39 @@ section {
     --recovery-dark: #2c3e50;
 }
 
-/* Clean navigation without overlays */
+/* Navigation with background image and visible text */
 nav {
-    background: var(--recovery-dark) !important;
+    background: var(--recovery-dark) url('../images/navigation-banner.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     position: relative;
-    min-height: 60px;
+    min-height: 200px;
     padding: 1rem 0;
 }
 
 nav ul li a {
-    color: var(--recovery-blue) !important;
+    color: #ffffff !important;
     font-weight: 600 !important;
-    font-size: 1rem !important;
+    font-size: 1.1rem !important;
     text-decoration: none !important;
-    background: none !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8) !important;
+    background: rgba(0, 0, 0, 0.3) !important;
     padding: 0.5rem 1rem !important;
     border-radius: 0.25rem !important;
-    transition: color 0.2s ease !important;
+    transition: all 0.2s ease !important;
 }
 
 nav ul li a:hover {
-    color: var(--recovery-green) !important;
-    background: none !important;
+    color: #ffffff !important;
+    background: rgba(0, 0, 0, 0.5) !important;
     text-decoration: none !important;
 }
 
 nav ul li strong a {
-    color: var(--recovery-blue) !important;
+    color: #ffffff !important;
     font-weight: 700 !important;
-    background: none !important;
+    background: rgba(0, 0, 0, 0.4) !important;
 }
 
 /* Logo styling */
