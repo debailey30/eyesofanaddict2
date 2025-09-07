@@ -322,6 +322,7 @@ def save_journal_entry():
     entry.trigger_notes = request.form.get('trigger_notes', '').strip()
     entry.coping_strategies = request.form.get('coping_strategies', '').strip()
     entry.support_connections = request.form.get('support_connections', '').strip()
+    entry.drawing_data = request.form.get('drawing_data', '').strip()
     
     # Update ratings
     entry.mood_rating = request.form.get('mood_rating', type=int)

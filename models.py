@@ -82,6 +82,7 @@ class JournalEntry(db.Model):
     trigger_notes = db.Column(db.Text, nullable=True)  # Trigger awareness notes
     coping_strategies = db.Column(db.Text, nullable=True)  # Strategies used today
     support_connections = db.Column(db.Text, nullable=True)  # People connected with
+    drawing_data = db.Column(db.Text, nullable=True)  # Canvas drawing data as base64
     
     # Progress tracking
     completed = db.Column(db.Boolean, default=False)

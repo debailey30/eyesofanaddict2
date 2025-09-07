@@ -3,7 +3,7 @@
 {% block title %}Day {{ current_day }} Recovery Journal | Eyes of an Addict{% endblock %}
 
 {% block content %}
-<main class="container">
+<main class="container journal-container" id="journalContainer">
     <header style="text-align: center; margin: 2rem 0;">
         <h1>📖 Recovery Journal - Day {{ current_day }}</h1>
         <p>Your personal space for reflection, growth, and recovery</p>
@@ -16,10 +16,10 @@
             <small id="completion-text">{{ entry.get_completion_percentage() }}% Complete</small>
         </div>
         
-        <!-- Day navigation -->
+        <!-- Day navigation with swipe hints -->
         <div style="margin: 2rem 0; display: flex; justify-content: center; gap: 1rem; align-items: center; flex-wrap: wrap;">
             {% if current_day > 1 %}
-                <a href="{{ url_for('recovery_journal', day=current_day-1) }}" role="button" class="secondary" style="font-size: 0.9rem;">← Day {{ current_day-1 }}</a>
+                <button onclick="navigateToDay({{ current_day-1 }})" role="button" class="secondary" style="font-size: 0.9rem;">← Day {{ current_day-1 }}</button>
             {% endif %}
             
             <select id="daySelector" onchange="navigateToDay(this.value)" style="padding: 0.5rem; border-radius: 0.3rem;">
@@ -29,22 +29,52 @@
             </select>
             
             {% if current_day < 30 %}
-                <a href="{{ url_for('recovery_journal', day=current_day+1) }}" role="button" class="secondary" style="font-size: 0.9rem;">Day {{ current_day+1 }} →</a>
+                <button onclick="navigateToDay({{ current_day+1 }})" role="button" class="secondary" style="font-size: 0.9rem;">Day {{ current_day+1 }} →</button>
             {% endif %}
         </div>
+        
+        <div style="text-align: center; margin: 1rem 0; color: #666; font-size: 0.9rem;">
+            💡 <strong>Swipe left/right</strong> to navigate between days | <strong>Touch & hold</strong> to draw
+        </div>
     </header>
+
+    <!-- Mode Toggle -->
+    <div style="text-align: center; margin: 2rem 0;">
+        <div class="mode-toggle" style="display: inline-flex; background: #f0f0f0; border-radius: 2rem; padding: 0.3rem;">
+            <button type="button" id="textModeBtn" class="mode-btn active" onclick="switchMode('text')" style="padding: 0.5rem 1.5rem; border: none; border-radius: 1.5rem; background: var(--recovery-blue); color: white; cursor: pointer;">📝 Text Mode</button>
+            <button type="button" id="drawModeBtn" class="mode-btn" onclick="switchMode('draw')" style="padding: 0.5rem 1.5rem; border: none; border-radius: 1.5rem; background: transparent; color: #666; cursor: pointer;">✏️ Draw Mode</button>
+        </div>
+    </div>
 
     <!-- Journal Form -->
     <form id="journalForm" style="max-width: 800px; margin: 0 auto;">
         <input type="hidden" name="day_number" value="{{ current_day }}">
+        <input type="hidden" name="drawing_data" id="drawingDataInput" value="{{ entry.drawing_data or '' }}">
         
         <!-- Daily Reflection Section -->
-        <section style="margin: 3rem 0; padding: 2rem; background: #f8f9fa; border-radius: 0.5rem;">
+        <section class="journal-section text-mode" style="margin: 3rem 0; padding: 2rem; background: #f8f9fa; border-radius: 0.5rem;">
             <h2 style="color: var(--recovery-blue); margin-bottom: 1rem;">💭 Daily Reflection</h2>
             <label for="daily_reflection">How are you feeling today? What's on your mind about your recovery journey?</label>
-            <textarea name="daily_reflection" id="daily_reflection" rows="6" 
-                      placeholder="Take your time to reflect on your day, your feelings, and your recovery progress..."
-                      style="width: 100%; margin: 0.5rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 0.3rem;">{{ entry.daily_reflection or '' }}</textarea>
+            <div class="input-container">
+                <textarea name="daily_reflection" id="daily_reflection" rows="6" 
+                          placeholder="Take your time to reflect on your day, your feelings, and your recovery progress..."
+                          style="width: 100%; margin: 0.5rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 0.3rem;">{{ entry.daily_reflection or '' }}</textarea>
+                <canvas class="drawing-canvas" id="reflectionCanvas" width="760" height="200" style="display: none; border: 2px dashed #ddd; border-radius: 0.3rem; cursor: crosshair; margin: 0.5rem 0;"></canvas>
+            </div>
+        </section>
+        
+        <!-- Free Drawing Section (Draw Mode Only) -->
+        <section class="journal-section draw-mode" style="margin: 3rem 0; padding: 2rem; background: #fff; border-radius: 0.5rem; border: 2px solid #e0e0e0; display: none;">
+            <h2 style="color: var(--recovery-purple); margin-bottom: 1rem;">🎨 Free Drawing & Notes</h2>
+            <p style="margin-bottom: 1rem; color: #666;">Use your finger or stylus to draw, sketch, or write freely</p>
+            <div style="text-align: center; margin-bottom: 1rem;">
+                <button type="button" onclick="clearCanvas('mainCanvas')" style="padding: 0.5rem 1rem; background: #ff6b6b; color: white; border: none; border-radius: 0.3rem; margin-right: 1rem;">🗑️ Clear</button>
+                <button type="button" onclick="changeDrawingColor('#000000')" style="padding: 0.5rem 1rem; background: #000; color: white; border: none; border-radius: 0.3rem; margin: 0 0.25rem;">⚫</button>
+                <button type="button" onclick="changeDrawingColor('#2E8B57')" style="padding: 0.5rem 1rem; background: #2E8B57; color: white; border: none; border-radius: 0.3rem; margin: 0 0.25rem;">🟢</button>
+                <button type="button" onclick="changeDrawingColor('#4169E1')" style="padding: 0.5rem 1rem; background: #4169E1; color: white; border: none; border-radius: 0.3rem; margin: 0 0.25rem;">🔵</button>
+                <button type="button" onclick="changeDrawingColor('#9370DB')" style="padding: 0.5rem 1rem; background: #9370DB; color: white; border: none; border-radius: 0.3rem; margin: 0 0.25rem;">🟣</button>
+            </div>
+            <canvas id="mainCanvas" width="760" height="400" style="border: 2px solid #ddd; border-radius: 0.3rem; cursor: crosshair; display: block; margin: 0 auto; background: white; touch-action: none;"></canvas>
         </section>
 
         <!-- Gratitude Section -->
@@ -297,6 +327,264 @@ input[type="range"]::-moz-range-thumb {
 <script>
 let saveTimeout;
 let isAutoSaving = false;
+let currentMode = 'text';
+let isDrawing = false;
+let currentColor = '#000000';
+let lastX = 0;
+let lastY = 0;
+
+// Touch/Swipe variables
+let startX = 0;
+let startY = 0;
+let isSwipeDetected = false;
+
+// Canvas references
+let canvases = {};
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
+    setupSwipeHandlers();
+    setupDrawingCanvases();
+    loadDrawingData();
+});
+
+function initializeApp() {
+    const inputs = document.querySelectorAll('#journalForm textarea, #journalForm input');
+    inputs.forEach(input => {
+        input.addEventListener('input', autoSave);
+    });
+}
+
+// Mode switching between text and draw
+function switchMode(mode) {
+    currentMode = mode;
+    
+    const textModeBtn = document.getElementById('textModeBtn');
+    const drawModeBtn = document.getElementById('drawModeBtn');
+    const textSections = document.querySelectorAll('.text-mode');
+    const drawSections = document.querySelectorAll('.draw-mode');
+    
+    if (mode === 'text') {
+        textModeBtn.style.background = 'var(--recovery-blue)';
+        textModeBtn.style.color = 'white';
+        drawModeBtn.style.background = 'transparent';
+        drawModeBtn.style.color = '#666';
+        
+        textSections.forEach(section => section.style.display = 'block');
+        drawSections.forEach(section => section.style.display = 'none');
+    } else {
+        drawModeBtn.style.background = 'var(--recovery-purple)';
+        drawModeBtn.style.color = 'white';
+        textModeBtn.style.background = 'transparent';
+        textModeBtn.style.color = '#666';
+        
+        textSections.forEach(section => section.style.display = 'none');
+        drawSections.forEach(section => section.style.display = 'block');
+    }
+}
+
+// Setup swipe handlers
+function setupSwipeHandlers() {
+    const container = document.getElementById('journalContainer');
+    
+    // Touch events
+    container.addEventListener('touchstart', handleTouchStart, { passive: false });
+    container.addEventListener('touchmove', handleTouchMove, { passive: false });
+    container.addEventListener('touchend', handleTouchEnd, { passive: false });
+    
+    // Mouse events for desktop testing
+    container.addEventListener('mousedown', handleMouseStart);
+    container.addEventListener('mousemove', handleMouseMove);
+    container.addEventListener('mouseup', handleMouseEnd);
+}
+
+function handleTouchStart(e) {
+    if (e.target.tagName === 'CANVAS') return; // Don't interfere with canvas drawing
+    
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    isSwipeDetected = false;
+}
+
+function handleTouchMove(e) {
+    if (e.target.tagName === 'CANVAS') return;
+    
+    if (!startX || !startY) return;
+    
+    const currentX = e.touches[0].clientX;
+    const currentY = e.touches[0].clientY;
+    
+    const diffX = startX - currentX;
+    const diffY = startY - currentY;
+    
+    // Check if horizontal swipe is dominant
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+        isSwipeDetected = true;
+        e.preventDefault(); // Prevent scrolling
+    }
+}
+
+function handleTouchEnd(e) {
+    if (e.target.tagName === 'CANVAS') return;
+    if (!isSwipeDetected) return;
+    
+    const currentDay = {{ current_day }};
+    const endX = e.changedTouches[0].clientX;
+    const diffX = startX - endX;
+    
+    if (Math.abs(diffX) > 100) { // Minimum swipe distance
+        if (diffX > 0 && currentDay < 30) {
+            // Swipe left - next day
+            navigateToDay(currentDay + 1);
+        } else if (diffX < 0 && currentDay > 1) {
+            // Swipe right - previous day
+            navigateToDay(currentDay - 1);
+        }
+    }
+    
+    startX = 0;
+    startY = 0;
+    isSwipeDetected = false;
+}
+
+// Mouse equivalents for desktop
+function handleMouseStart(e) {
+    if (e.target.tagName === 'CANVAS') return;
+    startX = e.clientX;
+    startY = e.clientY;
+}
+
+function handleMouseMove(e) {
+    if (e.target.tagName === 'CANVAS') return;
+    if (!startX) return;
+    
+    const diffX = startX - e.clientX;
+    if (Math.abs(diffX) > 50) {
+        isSwipeDetected = true;
+    }
+}
+
+function handleMouseEnd(e) {
+    if (e.target.tagName === 'CANVAS') return;
+    if (!isSwipeDetected) return;
+    
+    const currentDay = {{ current_day }};
+    const diffX = startX - e.clientX;
+    
+    if (Math.abs(diffX) > 100) {
+        if (diffX > 0 && currentDay < 30) {
+            navigateToDay(currentDay + 1);
+        } else if (diffX < 0 && currentDay > 1) {
+            navigateToDay(currentDay - 1);
+        }
+    }
+    
+    startX = 0;
+    isSwipeDetected = false;
+}
+
+// Canvas drawing setup
+function setupDrawingCanvases() {
+    const canvasElements = document.querySelectorAll('canvas');
+    
+    canvasElements.forEach(canvas => {
+        const ctx = canvas.getContext('2d');
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = currentColor;
+        
+        canvases[canvas.id] = { canvas, ctx };
+        
+        // Touch events for drawing
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDrawing);
+        
+        // Mouse events for drawing
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+    });
+}
+
+function startDrawing(e) {
+    e.preventDefault();
+    isDrawing = true;
+    
+    const rect = e.target.getBoundingClientRect();
+    const x = (e.clientX || e.touches[0].clientX) - rect.left;
+    const y = (e.clientY || e.touches[0].clientY) - rect.top;
+    
+    lastX = x;
+    lastY = y;
+}
+
+function draw(e) {
+    if (!isDrawing) return;
+    e.preventDefault();
+    
+    const canvas = e.target;
+    const ctx = canvases[canvas.id].ctx;
+    const rect = canvas.getBoundingClientRect();
+    
+    const x = (e.clientX || e.touches[0].clientX) - rect.left;
+    const y = (e.clientY || e.touches[0].clientY) - rect.top;
+    
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    
+    lastX = x;
+    lastY = y;
+    
+    // Auto-save canvas data
+    saveCanvasData();
+}
+
+function stopDrawing() {
+    isDrawing = false;
+}
+
+function clearCanvas(canvasId) {
+    const canvasData = canvases[canvasId];
+    if (canvasData) {
+        canvasData.ctx.clearRect(0, 0, canvasData.canvas.width, canvasData.canvas.height);
+        saveCanvasData();
+    }
+}
+
+function changeDrawingColor(color) {
+    currentColor = color;
+    Object.values(canvases).forEach(({ ctx }) => {
+        ctx.strokeStyle = color;
+    });
+}
+
+function saveCanvasData() {
+    const mainCanvas = document.getElementById('mainCanvas');
+    if (mainCanvas) {
+        const drawingData = mainCanvas.toDataURL();
+        document.getElementById('drawingDataInput').value = drawingData;
+        autoSave();
+    }
+}
+
+function loadDrawingData() {
+    const drawingData = document.getElementById('drawingDataInput').value;
+    if (drawingData) {
+        const mainCanvas = document.getElementById('mainCanvas');
+        const ctx = mainCanvas.getContext('2d');
+        const img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0);
+        };
+        img.src = drawingData;
+    }
+}
 
 // Auto-save functionality
 function autoSave() {
@@ -307,14 +595,6 @@ function autoSave() {
         saveEntry(true); // Silent auto-save
     }, 2000); // Save 2 seconds after user stops typing
 }
-
-// Add auto-save listeners to all form inputs
-document.addEventListener('DOMContentLoaded', function() {
-    const inputs = document.querySelectorAll('#journalForm textarea, #journalForm input');
-    inputs.forEach(input => {
-        input.addEventListener('input', autoSave);
-    });
-});
 
 // Save journal entry
 function saveEntry(silent = false) {
@@ -403,7 +683,15 @@ function updateSliderValue(sliderId, value) {
 
 // Navigate to different day
 function navigateToDay(day) {
-    window.location.href = `/recovery-journal?day=${day}`;
+    // Save current state before navigating
+    if (currentMode === 'draw') {
+        saveCanvasData();
+    }
+    saveEntry(true);
+    
+    setTimeout(() => {
+        window.location.href = `/recovery-journal?day=${day}`;
+    }, 500);
 }
 
 // Keyboard shortcuts
@@ -412,6 +700,13 @@ document.addEventListener('keydown', function(event) {
     if (event.ctrlKey && event.key === 's') {
         event.preventDefault();
         saveEntry();
+    }
+    
+    // Arrow keys for navigation
+    if (event.key === 'ArrowLeft' && {{ current_day }} > 1) {
+        navigateToDay({{ current_day }} - 1);
+    } else if (event.key === 'ArrowRight' && {{ current_day }} < 30) {
+        navigateToDay({{ current_day }} + 1);
     }
 });
 </script>
