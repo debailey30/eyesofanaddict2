@@ -1,4 +1,4 @@
-from flask import render_template, request, flash, redirect, url_for, session
+from flask import render_template, request, flash, redirect, url_for, session, send_from_directory
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db
 from forms import ContactForm, EmailSubscriptionForm, RegistrationForm, LoginForm
@@ -184,16 +184,16 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    """User dashboard for journal access"""
+    """User dashboard for recovery journal access"""
     # Check subscription status
     if not current_user.has_active_subscription():
         flash('Your subscription is not active. Please subscribe to access your recovery journal.', 'error')
         return redirect(url_for('subscription_info'))
     
-    # Get user's journal entries
+    # Get user's basic progress tracking entries
     entries = JournalEntry.query.filter_by(user_id=current_user.id).order_by(JournalEntry.day_number).all()
     
-    # Create missing entries for days 1-30
+    # Create missing entries for days 1-30 for progress tracking
     existing_days = {entry.day_number for entry in entries}
     for day in range(1, 31):
         if day not in existing_days:
@@ -260,6 +260,18 @@ def manage_subscription():
 def subscription_info():
     """Information about journal subscription"""
     return render_template('subscription_info.html')
+
+@app.route('/recovery-journal')
+@login_required
+def recovery_journal():
+    """Serve the full 79-page recovery journal to subscribers"""
+    # Check subscription status
+    if not current_user.has_active_subscription():
+        flash('Your subscription is not active. Please subscribe to access the recovery journal.', 'error')
+        return redirect(url_for('subscription_info'))
+    
+    # Serve the professional 79-page recovery journal
+    return send_from_directory('static/downloads', 'recovery-journal-full.pdf', as_attachment=False)
 
 @app.route('/create-owner-account')
 def create_owner_account():

@@ -28,8 +28,20 @@
         </div>
     </header>
 
+    <!-- Primary Recovery Journal Access -->
+    <section style="text-align: center; margin: 3rem 0; padding: 2rem; background: linear-gradient(135deg, var(--recovery-green), var(--recovery-blue)); border-radius: 1rem; color: white;">
+        <h2 style="color: white; margin-bottom: 1rem;">📖 Your Professional Recovery Journal</h2>
+        <p style="margin-bottom: 2rem; font-size: 1.1rem;">Access your comprehensive 79-page recovery journal with interactive features and expert guidance</p>
+        <a href="{{ url_for('recovery_journal') }}" role="button" style="background: white; color: var(--recovery-blue); border: none; font-weight: bold; padding: 1rem 2rem; font-size: 1.1rem;" target="_blank">
+            📚 Open Your Recovery Journal
+        </a>
+        <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.9;">Created by D. Bailey, CPRSS - Your personal guide through recovery</p>
+    </section>
+
+    <!-- Progress Tracking Section -->
     <section class="journal-grid">
-        <h2>Your Recovery Journey</h2>
+        <h2>Track Your Daily Progress</h2>
+        <p style="text-align: center; margin-bottom: 2rem; color: #666;">Use these checkboxes to track your daily journal completion alongside the full journal above</p>
         <div class="journal-days" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0;">
             {% for entry in entries %}
                 <article class="day-card" style="border: 2px solid {% if entry.completed %}var(--recovery-green){% else %}#dee2e6{% endif %}; border-radius: 0.5rem; padding: 1rem; text-align: center; transition: transform 0.3s ease;">
@@ -41,13 +53,13 @@
                         {% endif %}
                     {% elif entry.day_number == current_user.current_day %}
                         <p style="color: var(--recovery-blue);">📝 Current Day</p>
-                        <a href="#" role="button" style="font-size: 0.9rem;">Start Writing</a>
+                        <a href="{{ url_for('recovery_journal') }}" role="button" style="font-size: 0.9rem;" target="_blank">Work in Journal</a>
                     {% elif entry.day_number < current_user.current_day %}
-                        <p style="color: var(--recovery-orange);">⏳ Catch Up</p>
-                        <a href="#" role="button" class="secondary" style="font-size: 0.9rem;">Complete</a>
+                        <p style="color: var(--recovery-orange);">⏳ Available</p>
+                        <a href="{{ url_for('recovery_journal') }}" role="button" class="secondary" style="font-size: 0.9rem;" target="_blank">Continue</a>
                     {% else %}
-                        <p style="color: var(--recovery-gray);">🔒 Locked</p>
-                        <small>Complete previous days first</small>
+                        <p style="color: var(--recovery-gray);">🔒 Coming Soon</p>
+                        <small>Focus on current day first</small>
                     {% endif %}
                 </article>
             {% endfor %}
