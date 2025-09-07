@@ -63,26 +63,36 @@ section {
     --recovery-dark: #2c3e50;
 }
 
-/* Navigation with new background */
+/* Navigation with high contrast for maximum visibility */
 nav {
-    background: var(--recovery-dark) url('../images/navigation-banner.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background: #1a252f !important;
     position: relative;
-    min-height: 200px;
+    min-height: 80px;
+    padding: 1.5rem 0;
+    border-bottom: 2px solid var(--recovery-blue);
 }
 
 nav ul li a {
-    color: white !important;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    font-weight: 500;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    font-size: 1.2rem !important;
+    text-shadow: none !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.5rem !important;
+    transition: all 0.3s ease !important;
+}
+
+nav ul li a:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
 }
 
 nav ul li strong a {
-    color: white !important;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    font-weight: 600;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    background: rgba(255, 255, 255, 0.15) !important;
 }
 
 /* Logo styling */
@@ -95,18 +105,23 @@ nav img {
 
 /* Navigation enhancements */
 nav a[role="button"] {
-    background-color: var(--recovery-blue);
-    border-color: var(--recovery-blue);
-    color: white !important;
-    font-weight: 600;
+    background-color: var(--recovery-green) !important;
+    border-color: var(--recovery-green) !important;
+    color: #ffffff !important;
+    font-weight: 700;
     text-shadow: none;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 2rem !important;
+    position: relative;
+    z-index: 3;
 }
 
 nav a[role="button"]:hover {
-    background-color: #357abd;
-    border-color: #357abd;
-    color: white !important;
-    transform: translateY(-1px);
+    background-color: #219a52 !important;
+    border-color: #219a52 !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Button variations for recovery theme */
