@@ -25,6 +25,9 @@
         
         <div style="margin: 2rem 0;">
             <a href="{{ url_for('manage_subscription') }}" role="button" class="secondary">Manage Subscription</a>
+            {% if current_user.is_owner %}
+                <a href="{{ url_for('admin_layout') }}" role="button" style="margin-left: 1rem;">🎨 Customize Layout</a>
+            {% endif %}
         </div>
     </header>
 

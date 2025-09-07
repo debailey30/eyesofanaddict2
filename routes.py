@@ -2,7 +2,7 @@ from flask import render_template, request, flash, redirect, url_for, session, s
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db
 from forms import ContactForm, EmailSubscriptionForm, RegistrationForm, LoginForm
-from models import EmailSubscriber, ContactMessage, User, JournalEntry
+from models import EmailSubscriber, ContactMessage, User, JournalEntry, SiteSettings
 from email_service import send_welcome_email
 from stripe_service import create_checkout_session, create_customer_portal_session, get_subscription_status
 import stripe
@@ -207,7 +207,12 @@ def dashboard():
         db.session.rollback()
         logging.error(f"Error creating journal entries: {e}")
     
-    return render_template('dashboard.html', entries=entries, current_user=current_user)
+    # Get current layout settings for dynamic styling
+    settings = {}
+    for setting in SiteSettings.query.all():
+        settings[setting.setting_name] = setting.setting_value
+    
+    return render_template('dashboard.html', entries=entries, current_user=current_user, settings=settings)
 
 @app.route('/subscription/success')
 def subscription_success():
@@ -273,6 +278,63 @@ def recovery_journal():
     # Serve the professional 79-page recovery journal
     return send_from_directory('static/downloads', 'recovery-journal-full.pdf', as_attachment=False)
 
+@app.route('/admin/layout')
+@login_required
+def admin_layout():
+    """Admin interface for layout customization (owner only)"""
+    if not current_user.is_owner:
+        flash('Access denied. Admin privileges required.', 'error')
+        return redirect(url_for('dashboard'))
+    
+    # Get current settings
+    settings = {}
+    for setting in SiteSettings.query.all():
+        settings[setting.setting_name] = setting.setting_value
+    
+    return render_template('admin_layout.html', settings=settings)
+
+@app.route('/admin/layout/update', methods=['POST'])
+@login_required
+def update_layout():
+    """Update layout settings (owner only)"""
+    if not current_user.is_owner:
+        flash('Access denied. Admin privileges required.', 'error')
+        return redirect(url_for('dashboard'))
+    
+    # Update or create settings
+    layout_settings = {
+        'primary_color': request.form.get('primary_color', '#2E8B57'),
+        'secondary_color': request.form.get('secondary_color', '#4169E1'),
+        'accent_color': request.form.get('accent_color', '#9370DB'),
+        'dashboard_layout': request.form.get('dashboard_layout', 'grid'),
+        'font_size': request.form.get('font_size', 'medium'),
+        'card_style': request.form.get('card_style', 'modern'),
+        'spacing': request.form.get('spacing', 'normal')
+    }
+    
+    for setting_name, setting_value in layout_settings.items():
+        existing_setting = SiteSettings.query.filter_by(setting_name=setting_name).first()
+        if existing_setting:
+            existing_setting.setting_value = setting_value
+            existing_setting.updated_date = datetime.utcnow()
+        else:
+            new_setting = SiteSettings(
+                setting_name=setting_name,
+                setting_value=setting_value,
+                description=f"Layout setting for {setting_name}"
+            )
+            db.session.add(new_setting)
+    
+    try:
+        db.session.commit()
+        flash('Layout settings updated successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        logging.error(f"Error updating layout settings: {e}")
+        flash('Error updating settings. Please try again.', 'error')
+    
+    return redirect(url_for('admin_layout'))
+
 @app.route('/create-owner-account')
 def create_owner_account():
     """Create owner account for site access"""
@@ -292,6 +354,23 @@ def create_owner_account():
     
     try:
         db.session.add(owner)
+        db.session.commit()
+        
+        # Initialize default settings
+        default_settings = [
+            ('primary_color', '#2E8B57', 'Primary brand color'),
+            ('secondary_color', '#4169E1', 'Secondary brand color'),
+            ('accent_color', '#9370DB', 'Accent color for highlights'),
+            ('dashboard_layout', 'grid', 'Dashboard layout style'),
+            ('font_size', 'medium', 'Default font size'),
+            ('card_style', 'modern', 'Card design style'),
+            ('spacing', 'normal', 'Element spacing')
+        ]
+        
+        for name, value, desc in default_settings:
+            setting = SiteSettings(setting_name=name, setting_value=value, description=desc)
+            db.session.add(setting)
+        
         db.session.commit()
         return f"Owner account created! Email: owner@eyesofanaddict.online | Password: recovery2024"
     except Exception as e:

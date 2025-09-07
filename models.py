@@ -80,3 +80,14 @@ class JournalEntry(db.Model):
     
     def __repr__(self):
         return f'<JournalEntry Day {self.day_number} for User {self.user_id}>'
+
+class SiteSettings(db.Model):
+    """Model for customizable site layout and styling"""
+    id = db.Column(db.Integer, primary_key=True)
+    setting_name = db.Column(db.String(50), unique=True, nullable=False)
+    setting_value = db.Column(db.Text, nullable=False)
+    description = db.Column(db.String(200), nullable=True)
+    updated_date = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<SiteSettings {self.setting_name}: {self.setting_value}>'

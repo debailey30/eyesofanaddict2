@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Layout Settings | Eyes of an Addict{% endblock %}
+
+{% block content %}
+<main class="container">
+    <header style="text-align: center; margin: 2rem 0;">
+        <h1>🎨 Layout Customization</h1>
+        <p>Customize the look and feel of your recovery platform</p>
+        <small>Admin Access - {{ current_user.name }}</small>
+    </header>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;">
+        <!-- Settings Panel -->
+        <section>
+            <h2>Design Settings</h2>
+            <form method="POST" action="{{ url_for('update_layout') }}" id="layoutForm">
+                
+                <!-- Color Customization -->
+                <fieldset style="margin: 2rem 0;">
+                    <legend><strong>🎨 Brand Colors</strong></legend>
+                    
+                    <label for="primary_color">Primary Color (Recovery Green)</label>
+                    <input type="color" id="primary_color" name="primary_color" 
+                           value="{{ settings.get('primary_color', '#2E8B57') }}" 
+                           onchange="updatePreview()">
+                    
+                    <label for="secondary_color">Secondary Color (Recovery Blue)</label>
+                    <input type="color" id="secondary_color" name="secondary_color" 
+                           value="{{ settings.get('secondary_color', '#4169E1') }}" 
+                           onchange="updatePreview()">
+                    
+                    <label for="accent_color">Accent Color (Recovery Purple)</label>
+                    <input type="color" id="accent_color" name="accent_color" 
+                           value="{{ settings.get('accent_color', '#9370DB') }}" 
+                           onchange="updatePreview()">
+                </fieldset>
+
+                <!-- Layout Options -->
+                <fieldset style="margin: 2rem 0;">
+                    <legend><strong>📐 Layout Style</strong></legend>
+                    
+                    <label for="dashboard_layout">Dashboard Layout</label>
+                    <select id="dashboard_layout" name="dashboard_layout" onchange="updatePreview()">
+                        <option value="grid" {% if settings.get('dashboard_layout') == 'grid' %}selected{% endif %}>Grid Layout</option>
+                        <option value="list" {% if settings.get('dashboard_layout') == 'list' %}selected{% endif %}>List Layout</option>
+                        <option value="compact" {% if settings.get('dashboard_layout') == 'compact' %}selected{% endif %}>Compact View</option>
+                    </select>
+                    
+                    <label for="spacing">Element Spacing</label>
+                    <select id="spacing" name="spacing" onchange="updatePreview()">
+                        <option value="tight" {% if settings.get('spacing') == 'tight' %}selected{% endif %}>Tight</option>
+                        <option value="normal" {% if settings.get('spacing') == 'normal' %}selected{% endif %}>Normal</option>
+                        <option value="relaxed" {% if settings.get('spacing') == 'relaxed' %}selected{% endif %}>Relaxed</option>
+                    </select>
+                </fieldset>
+
+                <!-- Typography -->
+                <fieldset style="margin: 2rem 0;">
+                    <legend><strong>📝 Typography</strong></legend>
+                    
+                    <label for="font_size">Font Size</label>
+                    <select id="font_size" name="font_size" onchange="updatePreview()">
+                        <option value="small" {% if settings.get('font_size') == 'small' %}selected{% endif %}>Small</option>
+                        <option value="medium" {% if settings.get('font_size') == 'medium' %}selected{% endif %}>Medium</option>
+                        <option value="large" {% if settings.get('font_size') == 'large' %}selected{% endif %}>Large</option>
+                    </select>
+                </fieldset>
+
+                <!-- Card Styling -->
+                <fieldset style="margin: 2rem 0;">
+                    <legend><strong>🃏 Card Design</strong></legend>
+                    
+                    <label for="card_style">Card Style</label>
+                    <select id="card_style" name="card_style" onchange="updatePreview()">
+                        <option value="modern" {% if settings.get('card_style') == 'modern' %}selected{% endif %}>Modern</option>
+                        <option value="minimal" {% if settings.get('card_style') == 'minimal' %}selected{% endif %}>Minimal</option>
+                        <option value="rounded" {% if settings.get('card_style') == 'rounded' %}selected{% endif %}>Rounded</option>
+                        <option value="sharp" {% if settings.get('card_style') == 'sharp' %}selected{% endif %}>Sharp</option>
+                    </select>
+                </fieldset>
+
+                <div style="margin: 2rem 0; text-align: center;">
+                    <button type="submit" role="button">💾 Save Layout Changes</button>
+                    <a href="{{ url_for('dashboard') }}" role="button" class="secondary">👀 View Dashboard</a>
+                </div>
+            </form>
+        </section>
+
+        <!-- Live Preview Panel -->
+        <section>
+            <h2>🔍 Live Preview</h2>
+            <div id="preview-container" style="border: 2px solid #ddd; border-radius: 0.5rem; padding: 1rem; background: #f8f9fa;">
+                
+                <!-- Preview Header -->
+                <div id="preview-header" style="text-align: center; margin-bottom: 1rem;">
+                    <h3 id="preview-title" style="margin: 0;">Welcome, D. Bailey!</h3>
+                    <p style="margin: 0.5rem 0;">Your 30-Day Recovery Journal</p>
+                </div>
+
+                <!-- Preview Journal Button -->
+                <div id="preview-journal-section" style="text-align: center; margin: 1rem 0; padding: 1rem; border-radius: 0.5rem;">
+                    <h4 style="margin-bottom: 0.5rem;">📖 Recovery Journal</h4>
+                    <button id="preview-journal-btn" style="font-size: 0.9rem; padding: 0.5rem 1rem; border: none; border-radius: 0.3rem; cursor: pointer;">
+                        📚 Open Journal
+                    </button>
+                </div>
+
+                <!-- Preview Progress Cards -->
+                <div id="preview-cards" style="margin: 1rem 0;">
+                    <h4>Track Your Progress</h4>
+                    <div id="preview-grid" style="display: grid; gap: 0.5rem;">
+                        <!-- Sample Cards -->
+                        <div class="preview-card" style="border: 2px solid; padding: 0.5rem; text-align: center; border-radius: 0.3rem;">
+                            <strong>Day 1</strong>
+                            <p style="margin: 0.2rem 0; font-size: 0.8rem;">✓ Completed</p>
+                        </div>
+                        <div class="preview-card" style="border: 2px solid; padding: 0.5rem; text-align: center; border-radius: 0.3rem;">
+                            <strong>Day 2</strong>
+                            <p style="margin: 0.2rem 0; font-size: 0.8rem;">📝 Current</p>
+                        </div>
+                        <div class="preview-card" style="border: 2px solid; padding: 0.5rem; text-align: center; border-radius: 0.3rem;">
+                            <strong>Day 3</strong>
+                            <p style="margin: 0.2rem 0; font-size: 0.8rem;">🔒 Locked</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 1rem; padding: 1rem; background: #fff3cd; border-radius: 0.5rem; border: 1px solid #ffeaa7;">
+                <small><strong>💡 Preview Tip:</strong> Changes update instantly as you modify settings above. Save when you're happy with the design!</small>
+            </div>
+        </section>
+    </div>
+
+    <!-- Quick Actions -->
+    <section style="text-align: center; margin: 3rem 0; padding: 2rem; background: #f8f9fa; border-radius: 0.5rem;">
+        <h3>Quick Actions</h3>
+        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+            <a href="{{ url_for('dashboard') }}" role="button" class="secondary">🏠 Dashboard</a>
+            <a href="{{ url_for('recovery_journal') }}" role="button" class="secondary" target="_blank">📚 Journal</a>
+            <a href="{{ url_for('admin_layout') }}" role="button">🔄 Reset Form</a>
+        </div>
+    </section>
+</main>
+
+<style>
+/* Live preview styling */
+#preview-container {
+    min-height: 400px;
+    overflow-y: auto;
+}
+
+.preview-card {
+    transition: all 0.3s ease;
+}
+
+/* Form styling */
+fieldset {
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+legend {
+    padding: 0 0.5rem;
+    color: #333;
+}
+
+label {
+    display: block;
+    margin: 0.5rem 0 0.2rem 0;
+    font-weight: 500;
+}
+
+input[type="color"] {
+    width: 100%;
+    height: 3rem;
+    border: 1px solid #ddd;
+    border-radius: 0.3rem;
+    cursor: pointer;
+}
+
+select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 0.3rem;
+    margin-bottom: 1rem;
+}
+</style>
+
+<script>
+function updatePreview() {
+    // Get current form values
+    const primaryColor = document.getElementById('primary_color').value;
+    const secondaryColor = document.getElementById('secondary_color').value;
+    const accentColor = document.getElementById('accent_color').value;
+    const dashboardLayout = document.getElementById('dashboard_layout').value;
+    const fontSize = document.getElementById('font_size').value;
+    const cardStyle = document.getElementById('card_style').value;
+    const spacing = document.getElementById('spacing').value;
+    
+    // Update preview journal section
+    const journalSection = document.getElementById('preview-journal-section');
+    journalSection.style.background = `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`;
+    journalSection.style.color = 'white';
+    
+    // Update journal button
+    const journalBtn = document.getElementById('preview-journal-btn');
+    journalBtn.style.background = 'white';
+    journalBtn.style.color = secondaryColor;
+    
+    // Update grid layout
+    const grid = document.getElementById('preview-grid');
+    if (dashboardLayout === 'grid') {
+        grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+    } else if (dashboardLayout === 'list') {
+        grid.style.gridTemplateColumns = '1fr';
+    } else if (dashboardLayout === 'compact') {
+        grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+    }
+    
+    // Update spacing
+    const spacingValues = {
+        'tight': '0.3rem',
+        'normal': '0.5rem',
+        'relaxed': '0.8rem'
+    };
+    grid.style.gap = spacingValues[spacing];
+    
+    // Update font size
+    const container = document.getElementById('preview-container');
+    const fontSizes = {
+        'small': '0.9rem',
+        'medium': '1rem',
+        'large': '1.1rem'
+    };
+    container.style.fontSize = fontSizes[fontSize];
+    
+    // Update card styling
+    const cards = document.querySelectorAll('.preview-card');
+    cards.forEach((card, index) => {
+        // Set border colors based on card state
+        if (index === 0) {
+            card.style.borderColor = primaryColor; // Completed
+        } else if (index === 1) {
+            card.style.borderColor = secondaryColor; // Current
+        } else {
+            card.style.borderColor = '#dee2e6'; // Locked
+        }
+        
+        // Apply card style
+        if (cardStyle === 'rounded') {
+            card.style.borderRadius = '1rem';
+        } else if (cardStyle === 'sharp') {
+            card.style.borderRadius = '0';
+        } else if (cardStyle === 'minimal') {
+            card.style.border = '1px solid #eee';
+            card.style.boxShadow = 'none';
+        } else { // modern
+            card.style.borderRadius = '0.3rem';
+            card.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+        }
+    });
+}
+
+// Initialize preview on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updatePreview();
+});
+</script>
+{% endblock %}
