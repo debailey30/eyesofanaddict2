@@ -74,7 +74,7 @@ nav {
     padding: 1rem 0;
 }
 
-nav ul li a {
+nav.container-fluid ul li a {
     color: #ffffff !important;
     font-weight: 700 !important;
     font-size: 1.2rem !important;
@@ -85,16 +85,17 @@ nav ul li a {
     border-radius: 0.5rem !important;
     border: 2px solid rgba(255, 255, 255, 0.3) !important;
     transition: all 0.2s ease !important;
+    display: inline-block !important;
 }
 
-nav ul li a:hover {
+nav.container-fluid ul li a:hover {
     color: #ffffff !important;
     background: rgba(0, 0, 0, 0.9) !important;
     border-color: rgba(255, 255, 255, 0.5) !important;
     text-decoration: none !important;
 }
 
-nav ul li strong a {
+nav.container-fluid ul li strong a {
     color: #ffffff !important;
     font-weight: 800 !important;
     background: rgba(0, 0, 0, 0.85) !important;
@@ -110,7 +111,7 @@ nav img {
 }
 
 /* Highly visible button styling */
-nav a[role="button"] {
+nav.container-fluid a[role="button"] {
     background-color: var(--recovery-green) !important;
     border: 3px solid var(--recovery-green) !important;
     color: white !important;
@@ -121,9 +122,10 @@ nav a[role="button"] {
     text-decoration: none !important;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+    display: inline-block !important;
 }
 
-nav a[role="button"]:hover {
+nav.container-fluid a[role="button"]:hover {
     background-color: var(--recovery-orange) !important;
     border-color: var(--recovery-orange) !important;
     color: white !important;
