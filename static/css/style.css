@@ -63,36 +63,35 @@ section {
     --recovery-dark: #2c3e50;
 }
 
-/* Navigation with high contrast for maximum visibility */
+/* Clean navigation without overlays */
 nav {
-    background: #1a252f !important;
+    background: var(--recovery-dark) !important;
     position: relative;
-    min-height: 80px;
-    padding: 1.5rem 0;
-    border-bottom: 2px solid var(--recovery-blue);
+    min-height: 60px;
+    padding: 1rem 0;
 }
 
 nav ul li a {
-    color: #ffffff !important;
-    font-weight: 700 !important;
-    font-size: 1.2rem !important;
-    text-shadow: none !important;
-    background: rgba(255, 255, 255, 0.1) !important;
+    color: var(--recovery-blue) !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    text-decoration: none !important;
+    background: none !important;
     padding: 0.5rem 1rem !important;
-    border-radius: 0.5rem !important;
-    transition: all 0.3s ease !important;
+    border-radius: 0.25rem !important;
+    transition: color 0.2s ease !important;
 }
 
 nav ul li a:hover {
-    background: rgba(255, 255, 255, 0.2) !important;
-    color: #ffffff !important;
-    transform: translateY(-1px) !important;
+    color: var(--recovery-green) !important;
+    background: none !important;
+    text-decoration: none !important;
 }
 
 nav ul li strong a {
-    color: #ffffff !important;
-    font-weight: 800 !important;
-    background: rgba(255, 255, 255, 0.15) !important;
+    color: var(--recovery-blue) !important;
+    font-weight: 700 !important;
+    background: none !important;
 }
 
 /* Logo styling */
@@ -103,25 +102,21 @@ nav img {
     padding: 2px;
 }
 
-/* Navigation enhancements */
+/* Clean button styling */
 nav a[role="button"] {
     background-color: var(--recovery-green) !important;
-    border-color: var(--recovery-green) !important;
-    color: #ffffff !important;
-    font-weight: 700;
-    text-shadow: none;
-    padding: 0.75rem 1.5rem !important;
-    border-radius: 2rem !important;
-    position: relative;
-    z-index: 3;
+    border: 2px solid var(--recovery-green) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    padding: 0.5rem 1.5rem !important;
+    border-radius: 0.5rem !important;
+    text-decoration: none !important;
 }
 
 nav a[role="button"]:hover {
-    background-color: #219a52 !important;
-    border-color: #219a52 !important;
-    color: #ffffff !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: var(--recovery-blue) !important;
+    border-color: var(--recovery-blue) !important;
+    color: white !important;
 }
 
 /* Button variations for recovery theme */
