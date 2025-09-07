@@ -46,6 +46,39 @@
         <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.9;">Created by D. Bailey, CPRSS - Your personal space for growth and reflection</p>
     </section>
 
+    <!-- Welcome Instructions for New Subscribers -->
+    {% if current_user.has_active_subscription() and current_user.days_completed == 0 and current_user.current_day == 1 %}
+    <section style="margin: 2rem 0; padding: 2rem; background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 1rem; border-left: 5px solid var(--recovery-blue);">
+        <h3 style="color: var(--recovery-blue); margin-bottom: 1rem;">🎉 Welcome to Your Recovery Journey!</h3>
+        <p style="margin-bottom: 1.5rem; font-size: 1.1rem;">Congratulations on taking this important step. Here's how to get the most out of your recovery journal:</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+            <div style="background: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h4 style="color: var(--recovery-green); margin-bottom: 0.5rem;">📝 Two Ways to Journal</h4>
+                <p style="font-size: 0.9rem; line-height: 1.5; margin: 0;">Switch between <strong>Text Mode</strong> for typed reflections and <strong>Draw Mode</strong> for free-hand writing with your finger or stylus.</p>
+            </div>
+            
+            <div style="background: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h4 style="color: var(--recovery-blue); margin-bottom: 0.5rem;">📱 Swipe to Navigate</h4>
+                <p style="font-size: 0.9rem; line-height: 1.5; margin: 0;"><strong>Swipe left/right</strong> to move between days, or use the day selector. Your progress saves automatically!</p>
+            </div>
+            
+            <div style="background: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h4 style="color: var(--recovery-purple); margin-bottom: 0.5rem;">🎯 Daily Completion</h4>
+                <p style="font-size: 0.9rem; line-height: 1.5; margin: 0;">Fill out at least 50% of each day's sections to mark it complete. Track your progress with the completion bar.</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: rgba(46, 139, 87, 0.1); border-radius: 0.5rem;">
+            <p style="margin-bottom: 1rem; font-weight: bold; color: var(--recovery-green);">🌟 Remember: This is YOUR journey</p>
+            <p style="margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.5;">Be honest, be patient with yourself, and remember that recovery is a process. Every day you show up is a victory worth celebrating.</p>
+            <a href="{{ url_for('recovery_journal') }}" role="button" style="background: var(--recovery-green); color: white; padding: 1rem 2rem; border: none; font-weight: bold; text-decoration: none; border-radius: 0.5rem; display: inline-block;">
+                🚀 Start Your Day 1 Journey
+            </a>
+        </div>
+    </section>
+    {% endif %}
+
     <!-- Progress Tracking Section -->
     <section class="journal-grid">
         <h2>Track Your Daily Progress</h2>

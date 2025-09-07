@@ -36,6 +36,21 @@
         <div style="text-align: center; margin: 1rem 0; color: #666; font-size: 0.9rem;">
             💡 <strong>Swipe left/right</strong> to navigate between days | <strong>Touch & hold</strong> to draw
         </div>
+        
+        <!-- First-time user instructions -->
+        {% if current_day == 1 and entry.get_completion_percentage() == 0 %}
+        <div style="background: #e3f2fd; border-radius: 0.5rem; padding: 1.5rem; margin: 1rem 0; border-left: 4px solid var(--recovery-blue);">
+            <h4 style="color: var(--recovery-blue); margin-bottom: 0.5rem;">👋 Getting Started</h4>
+            <p style="margin-bottom: 1rem; font-size: 0.9rem; line-height: 1.5;">Welcome to your interactive recovery journal! Here are a few quick tips:</p>
+            <ul style="font-size: 0.9rem; line-height: 1.5; margin-left: 1rem;">
+                <li>Take your time - there's no rush to complete everything at once</li>
+                <li>Be honest with yourself - this is your safe space</li>
+                <li>Your entries save automatically as you type</li>
+                <li>Use the mode toggle above to switch between text and drawing</li>
+                <li>Complete at least 50% to unlock the next day</li>
+            </ul>
+        </div>
+        {% endif %}
     </header>
 
     <!-- Mode Toggle -->
